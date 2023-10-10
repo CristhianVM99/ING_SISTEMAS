@@ -1,0 +1,35 @@
+export const TIPOS = {
+    ALL_CURSOS: "ALL_CURSOS",
+    ALL_CONVOCATORIAS: "ALL_CONVOCATORIAS",
+    COMUNICADOS: "COMUNICADOS",
+    AVISOS: "AVISOS",
+    CONVOCATORIAS: "CONVOCATORIAS",
+    CURSOS: "CURSOS",
+    SEMINARIOS: "SEMINARIOS",
+    KARDEX: "KARDEX",
+    CALENDARIO: "CALENDARIO",
+    HORARIO: "HORARIO",
+    PLANESTUDIO: "PLANESTUDIO",
+    PLAN: "PLAN",
+    REGLAMENTO: "REGLAMENTO",
+    CONVENIOS: "CONVENIOS",
+    PASANTIAS: "PASANTIAS",
+    TRABAJOS: "TRABAJOS",
+    INSTITUTO: "INSTITUTO",
+    CONVENIO: "CONVENIO",
+    PASANTIA: "PASANTIA",
+    TRABAJO_DIRIGIDO: "TRABAJO DIRIGIDO",
+    SERVICIOS: "SERVICIOS",
+    OFERTAS_ACADEMICAS: "OFERTAS_ACADEMICAS",
+    PUBLICACIONES: "PUBLICACIONES",
+    GACETAS: "GACETAS",
+    EVENTOS: "EVENTOS",
+    VIDEOS: "VIDEOS",
+    INSTITUTO_INVESTIGACION: "INSTITUTO_DE_INVESTIGACION",
+};
+/* =============================================================================
+  /
+  /    WEB DEVELOPER => CRISTHIAN VILLCA MAMANI
+  /    LINKEDIN => https://www.linkedin.com/in/cristhian-villca-mamani-06933b251/
+  /
+  ================================================================================ */
