@@ -44,3 +44,18 @@ Primary use:  ib-themes
 body {
     cursor: default !important;
 }
+
+@media (max-width: 768px) {
+    /* Estilos específicos para dispositivos móviles */
+    .content-search-btn {
+        display: block !important;
+    }
+    .content-btn {
+        display: flex;
+        justify-content: space-between;
+    }
+    .content-search {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+}

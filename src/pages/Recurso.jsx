@@ -38,12 +38,9 @@ const Recurso = () => {
             <section id="blog" className="section">
                 <div className="container">
                     <div className="title">
-                        <h3>Convocatorias, Comunicados y Avisos</h3>
+                        <h3>Lo Ultimo de {categoria}</h3>
                     </div>
-                    <Blog
-                        categoria={TIPOS.CONVOCATORIAS}
-                        institucion={institucion}
-                    />
+                    <Blog categoria={categoria} institucion={institucion} />
                 </div>
             </section>
             {/* End Portfolio Section */}

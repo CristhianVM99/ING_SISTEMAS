@@ -8,6 +8,7 @@ import {
     FiPhoneOutgoing,
 } from "react-icons/fi";
 import { FaHome, FaBlog } from "react-icons/fa";
+import { TIPOS } from "../../types/types";
 
 const HeaderTwo = ({ institucion = null }) => {
     const [click, setClick] = useState(false);
@@ -125,7 +126,7 @@ const HeaderTwo = ({ institucion = null }) => {
                             <li>
                                 <NavLink
                                     className="nav-link"
-                                    to={`/Recurso/convocatorias`}
+                                    to={`/Recurso/${TIPOS.CONVOCATORIAS}`}
                                     onClick={handleClick}
                                 >
                                     <FaBlog />
@@ -133,7 +134,82 @@ const HeaderTwo = ({ institucion = null }) => {
                                         className="item"
                                         style={{ fontSize: "10px" }}
                                     >
-                                        Convocatorias <br />y Cursos
+                                        Convocatorias
+                                    </span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className="nav-link"
+                                    to={`/Recurso/${TIPOS.COMUNICADOS}`}
+                                    onClick={handleClick}
+                                >
+                                    <FaBlog />
+                                    <span
+                                        className="item"
+                                        style={{ fontSize: "10px" }}
+                                    >
+                                        Comunicados
+                                    </span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className="nav-link"
+                                    to={`/Recurso/${TIPOS.AVISOS}`}
+                                    onClick={handleClick}
+                                >
+                                    <FaBlog />
+                                    <span
+                                        className="item"
+                                        style={{ fontSize: "10px" }}
+                                    >
+                                        Avisos
+                                    </span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className="nav-link"
+                                    to={`/Recurso/${TIPOS.CURSOS}`}
+                                    onClick={handleClick}
+                                >
+                                    <FaBlog />
+                                    <span
+                                        className="item"
+                                        style={{ fontSize: "10px" }}
+                                    >
+                                        Cursos
+                                    </span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className="nav-link"
+                                    to={`/Recurso/${TIPOS.SEMINARIOS}`}
+                                    onClick={handleClick}
+                                >
+                                    <FaBlog />
+                                    <span
+                                        className="item"
+                                        style={{ fontSize: "10px" }}
+                                    >
+                                        Seminarios
+                                    </span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    className="nav-link"
+                                    to={`/Recurso/${TIPOS.OFERTAS_ACADEMICAS}`}
+                                    onClick={handleClick}
+                                >
+                                    <FaBlog />
+                                    <span
+                                        className="item"
+                                        style={{ fontSize: "10px" }}
+                                    >
+                                        Ofertas
                                     </span>
                                 </NavLink>
                             </li>

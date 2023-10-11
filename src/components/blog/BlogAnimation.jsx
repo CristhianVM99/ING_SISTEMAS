@@ -2,8 +2,18 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import Contact from "../contact/Contact";
 import { TIPOS } from "../../types/types";
-import { getConvocatorias, getCursos } from "../../api/institucionAPI";
+import {
+    getConvocatorias,
+    getCursos,
+    getEventos,
+    getGacetas,
+    getOfertasAcademicas,
+    getPublicaciones,
+    getServicios,
+    getVideos,
+} from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
+import { FaSearch } from "react-icons/fa";
 
 Modal.setAppElement("#root");
 
@@ -20,18 +30,50 @@ const Blog = ({ categoria, institucion = null }) => {
         queryFn: getCursos,
     });
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [isOpen2, setIsOpen2] = useState(false);
-    const [isOpen3, setIsOpen3] = useState(false);
+    /* OBTENCION DE INFORMACION DEL STORE API SERVICIOS*/
+    const { isLoading: loading_servicios, data: servicios } = useQuery({
+        queryKey: ["servicios"],
+        queryFn: getServicios,
+    });
 
-    function toggleModalOne() {
+    /* OBTENCION DE INFORMACION DEL STORE API OFERTAS ACADEMICAS*/
+    const { isLoading: loading_ofertas, data: ofertas } = useQuery({
+        queryKey: ["ofertas"],
+        queryFn: getOfertasAcademicas,
+    });
+
+    /* OBTENCION DE INFORMACION DEL STORE API PUBLICACIONES*/
+    const { isLoading: loading_publicaciones, data: publicaciones } = useQuery({
+        queryKey: ["publicaciones"],
+        queryFn: getPublicaciones,
+    });
+
+    /* OBTENCION DE INFORMACION DEL STORE API GACETAS*/
+    const { isLoading: loading_gacetas, data: gacetas } = useQuery({
+        queryKey: ["gacetas"],
+        queryFn: getGacetas,
+    });
+
+    /* OBTENCION DE INFORMACION DEL STORE API EVENTOS*/
+    const { isLoading: loading_eventos, data: eventos } = useQuery({
+        queryKey: ["eventos"],
+        queryFn: getEventos,
+    });
+
+    /* OBTENCION DE INFORMACION DEL STORE API VIDEOS*/
+    const { isLoading: loading_videos, data: videos } = useQuery({
+        queryKey: ["videos"],
+        queryFn: getVideos,
+    });
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [search, setSearch] = useState("");
+
+    function toggleModal(item) {
+        setSelectedConvocatoria(item);
         setIsOpen(!isOpen);
-    }
-    function toggleModalTwo() {
-        setIsOpen2(!isOpen2);
-    }
-    function toggleModalThree() {
-        setIsOpen3(!isOpen3);
     }
 
     function formatearFecha(fechaString) {
@@ -59,914 +101,1975 @@ const Blog = ({ categoria, institucion = null }) => {
         return `${día} de ${mes} de ${año}`;
     }
 
-    function convertirHora(hora24) {
-        const [hora, minutos] = hora24.split(":");
-        const horaNum = parseInt(hora, 10);
-        const periodo = horaNum >= 12 ? "PM" : "AM";
-        const hora12 =
-            horaNum > 12 ? horaNum - 12 : horaNum === 0 ? 12 : horaNum;
-        const horaFormateada = `${hora12}:${minutos} ${periodo}`;
-        return horaFormateada;
-    }
+    // function convertirHora(hora24) {
+    //     const [hora, minutos] = hora24.split(":");
+    //     const horaNum = parseInt(hora, 10);
+    //     const periodo = horaNum >= 12 ? "PM" : "AM";
+    //     const hora12 =
+    //         horaNum > 12 ? horaNum - 12 : horaNum === 0 ? 12 : horaNum;
+    //     const horaFormateada = `${hora12}:${minutos} ${periodo}`;
+    //     return horaFormateada;
+    // }
 
-    function getLastConvocatoriasItemByTipo(convocatorias, tipo) {
-        const filteredData = convocatorias.filter(
-            (e) => e.tipo_conv_comun.tipo_conv_comun_titulo === tipo
-        );
-        return filteredData.length > 0
-            ? filteredData[filteredData.length - 1]
-            : null;
-    }
+    const prevPage = () => {
+        if (currentPage > 0) setCurrentPage(currentPage - 6);
+    };
+    const onSearchChange = ({ target }) => {
+        setCurrentPage(0);
+        setSearch(target.value);
+    };
 
-    function getLastCursosItemByTipo(cursos, tipo) {
-        const filteredData = cursos.filter(
-            (e) => e.tipo_curso_otro.tipo_conv_curso_nombre === tipo
-        );
-        return filteredData.length > 0
-            ? filteredData[filteredData.length - 1]
-            : null;
-    }
-
+    // convocatorias, comunicados y avisos
     if (
-        institucion != null &&
-        categoria === TIPOS.ALL_CONVOCATORIAS &&
+        institucion &&
+        categoria === TIPOS.CONVOCATORIAS &&
         !loading_convocatorias
     ) {
         const { institucion_nombre, institucion_logo } = institucion;
 
-        const lastComunicado = getLastConvocatoriasItemByTipo(
-            convocatorias,
-            TIPOS.COMUNICADOS
-        );
-        const lastConvocatoria = getLastConvocatoriasItemByTipo(
-            convocatorias,
-            TIPOS.CONVOCATORIAS
-        );
-        const lastAviso = getLastConvocatoriasItemByTipo(
-            convocatorias,
-            TIPOS.AVISOS
-        );
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return convocatorias
+                    .filter(
+                        (e) =>
+                            e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.CONVOCATORIAS
+                    )
+                    .slice(currentPage, currentPage + 6);
+            }
+            return convocatorias
+                .filter(
+                    (e) =>
+                        e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.CONVOCATORIAS &&
+                        e.con_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                convocatorias.filter(
+                    (e) =>
+                        e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.CONVOCATORIAS &&
+                        e.con_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
 
         return (
             <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
                 <div className="row">
-                    <div className="col-md-4 m-15px-tb">
-                        <div className="blog-grid" onClick={toggleModalOne}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(
-                                        lastConvocatoria.con_fecha_inicio
-                                    )}{" "}
-                                    -{" "}
-                                    {
-                                        lastConvocatoria.tipo_conv_comun
-                                            .tipo_conv_comun_titulo
-                                    }
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${item.con_foto_portada}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
                                 </div>
-                                <h6>
-                                    <a>{lastConvocatoria.con_titulo}</a>
-                                </h6>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.con_fecha_inicio)}{" "}
+                                        -{" "}
+                                        {
+                                            item.tipo_conv_comun
+                                                .tipo_conv_comun_titulo
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{item.con_titulo}</a>
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ))}
                     {/* End .col for blog-1 */}
-
-                    <div className="col-md-4 m-15px-tb">
-                        <div className="blog-grid" onClick={toggleModalTwo}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastComunicado.con_foto_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(
-                                        lastComunicado.con_fecha_inicio
-                                    )}{" "}
-                                    -{" "}
-                                    {
-                                        lastComunicado.tipo_conv_comun
-                                            .tipo_conv_comun_titulo
-                                    }
-                                </div>
-                                <h6>
-                                    <a>{lastComunicado.con_titulo}</a>
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/* End .col for blog-2 */}
-
-                    <div className="col-md-4 m-15px-tb">
-                        <div className="blog-grid" onClick={toggleModalThree}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastAviso.con_foto_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(lastAviso.con_fecha_inicio)}{" "}
-                                    -{" "}
-                                    {
-                                        lastAviso.tipo_conv_comun
-                                            .tipo_conv_comun_titulo
-                                    }
-                                </div>
-                                <h6>
-                                    <a>{lastAviso.con_titulo}</a>
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/* End .col for blog-3 */}
                 </div>
                 {/* End .row */}
 
-                {/* Start Modal for Blog-1 */}
-                <Modal
-                    isOpen={isOpen}
-                    onRequestClose={toggleModalOne}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalOne}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
 
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>
-                                                {lastConvocatoria.con_titulo}
-                                            </h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastConvocatoria.con_fecha_inicio
-                                                        )}
-                                                    </span>
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${selectedConvocatoria.con_foto_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.con_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.con_fecha_inicio
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCIÓN</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.con_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.con_fecha_inicio
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.con_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {/* End .article-title */}
-
-                                        <hr />
-                                        <h5>DESCRIPCIÓN</h5>
-                                        <hr />
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastConvocatoria.con_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Fecha de inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastConvocatoria.con_fecha_inicio
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastConvocatoria.con_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
-                {/* End  Modal for Blog-1 */}
-
-                {/* Start Modal for Blog-2 */}
-                <Modal
-                    isOpen={isOpen2}
-                    onRequestClose={toggleModalTwo}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalTwo}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
-
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastComunicado.con_foto_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>{lastComunicado.con_titulo}</h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastComunicado.con_fecha_inicio
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* End .article-title */}
-
-                                        <hr />
-                                        <h5>DESCRIPCIÓN</h5>
-                                        <hr />
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastComunicado.con_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Fecha de inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastComunicado.con_fecha_inicio
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastComunicado.con_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
-                {/* End  Modal for Blog-2 */}
-
-                {/* Start Modal for Blog-3 */}
-                <Modal
-                    isOpen={isOpen3}
-                    onRequestClose={toggleModalThree}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalThree}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
-
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastAviso.con_foto_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>{lastAviso.con_titulo}</h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastAviso.con_fecha_inicio
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* End .article-title */}
-
-                                        <hr />
-                                        <h5>DESCRIPCIÓN</h5>
-                                        <hr />
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastAviso.con_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Fecha de inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastAviso.con_fecha_inicio
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastAviso.con_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
-                {/* End  Modal for Blog-3 */}
+                        {/* End modal box news */}
+                    </Modal>
+                )}
             </>
         );
     }
     if (
-        institucion != null &&
-        categoria === TIPOS.ALL_CURSOS &&
-        !loading_cursos
+        institucion &&
+        categoria === TIPOS.COMUNICADOS &&
+        !loading_convocatorias
     ) {
         const { institucion_nombre, institucion_logo } = institucion;
 
-        const lastCurso = getLastCursosItemByTipo(cursos, TIPOS.CURSOS);
-        const lastSeminario = getLastCursosItemByTipo(cursos, TIPOS.SEMINARIOS);
+        const filter_comunicados = () => {
+            if (search.length === 0) {
+                return convocatorias
+                    .filter(
+                        (e) =>
+                            e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.COMUNICADOS
+                    )
+                    .slice(currentPage, currentPage + 6);
+            }
+            return convocatorias
+                .filter(
+                    (e) =>
+                        e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.COMUNICADOS &&
+                        e.con_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                convocatorias.filter(
+                    (e) =>
+                        e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.COMUNICADOS &&
+                        e.con_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
         return (
             <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
                 <div className="row">
-                    <div className="col-md-4 m-15px-tb">
-                        <div className="blog-grid" onClick={toggleModalOne}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Cursos/${lastCurso.det_img_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(lastCurso.det_fecha_ini)} -{" "}
-                                    {
-                                        lastCurso.tipo_curso_otro
-                                            .tipo_conv_curso_nombre
-                                    }
+                    {filter_comunicados().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${item.con_foto_portada}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
                                 </div>
-                                <h6>
-                                    <a>{lastCurso.det_titulo}</a>
-                                </h6>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.con_fecha_inicio)}{" "}
+                                        -{" "}
+                                        {
+                                            item.tipo_conv_comun
+                                                .tipo_conv_comun_titulo
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{item.con_titulo}</a>
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ))}
                     {/* End .col for blog-1 */}
-
-                    <div className="col-md-4 m-15px-tb">
-                        <div className="blog-grid" onClick={toggleModalTwo}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Cursos/${lastSeminario.det_img_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(
-                                        lastSeminario.det_fecha_ini
-                                    )}{" "}
-                                    -{" "}
-                                    {
-                                        lastSeminario.tipo_curso_otro
-                                            .tipo_conv_curso_nombre
-                                    }
-                                </div>
-                                <h6>
-                                    <a>{lastSeminario.det_titulo}</a>
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/* End .col for blog-2 */}
                 </div>
                 {/* End .row */}
 
-                {/* Start Modal for Blog-1 */}
-                <Modal
-                    isOpen={isOpen}
-                    onRequestClose={toggleModalOne}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalOne}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
 
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Cursos/${lastCurso.det_img_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>{lastCurso.det_titulo}</h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastCurso.det_fecha_ini
-                                                        )}
-                                                    </span>
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${selectedConvocatoria.con_foto_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.con_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.con_fecha_inicio
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCIÓN</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.con_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.con_fecha_inicio
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.con_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {/* End .article-title */}
-
-                                        <h5>DESCRIPCION</h5>
-                                        <hr />
-                                        <div
-                                            className="article-content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastCurso.det_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Costo para estudiantes :{" "}
-                                            <span>{lastCurso.det_costo}</span>
-                                        </p>
-                                        <p>
-                                            Costo para Extranjeros :{" "}
-                                            <span>
-                                                {lastCurso.det_costo_ext}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Costo para Profesionales :{" "}
-                                            <span>
-                                                {lastCurso.det_costo_profe}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Cupos disponibles :{" "}
-                                            <span>
-                                                {lastCurso.det_cupo_max}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Carga Horaria :{" "}
-                                            <span>
-                                                {lastCurso.det_carga_horaria}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Lugar de Capacitacion :{" "}
-                                            <span>
-                                                {lastCurso.det_lugar_curso}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Modalidad :{" "}
-                                            <span>
-                                                {lastCurso.det_modalidad}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastCurso.det_fecha_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastCurso.det_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Hora de Inicio :{" "}
-                                            <span>
-                                                {convertirHora(
-                                                    lastCurso.det_hora_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Enlace de WhatsApp :{" "}
-                                            <span>
-                                                <a
-                                                    style={{
-                                                        color: "var(--color-primario)",
-                                                    }}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href={
-                                                        lastCurso.det_grupo_whatssap
-                                                    }
-                                                >
-                                                    Link de Curso...
-                                                </a>
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Version del Curso :{" "}
-                                            <span>{lastCurso.det_version}</span>
-                                        </p>
-                                        {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
-                {/* End  Modal for Blog-1 */}
-
-                {/* Start Modal for Blog-2 */}
-                <Modal
-                    isOpen={isOpen2}
-                    onRequestClose={toggleModalTwo}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalTwo}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
-
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Cursos/${lastSeminario.det_img_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>{lastSeminario.det_titulo}</h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastSeminario.det_fecha_ini
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* End .article-title */}
-
-                                        <h5>DESCRIPCION</h5>
-                                        <hr />
-                                        <div
-                                            className="article-content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastSeminario.det_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Costo para estudiantes :{" "}
-                                            <span>
-                                                {lastSeminario.det_costo}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Costo para Extranjeros :{" "}
-                                            <span>
-                                                {lastSeminario.det_costo_ext}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Costo para Profesionales :{" "}
-                                            <span>
-                                                {lastSeminario.det_costo_profe}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Cupos disponibles :{" "}
-                                            <span>
-                                                {lastSeminario.det_cupo_max}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Carga Horaria :{" "}
-                                            <span>
-                                                {
-                                                    lastSeminario.det_carga_horaria
-                                                }
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Lugar de Capacitacion :{" "}
-                                            <span>
-                                                {lastSeminario.det_lugar_curso}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Modalidad :{" "}
-                                            <span>
-                                                {lastSeminario.det_modalidad}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastSeminario.det_fecha_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastSeminario.det_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Hora de Inicio :{" "}
-                                            <span>
-                                                {convertirHora(
-                                                    lastSeminario.det_hora_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Enlace de WhatsApp :{" "}
-                                            <span>
-                                                <a
-                                                    style={{
-                                                        color: "var(--color-primario)",
-                                                    }}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href={
-                                                        lastSeminario.det_grupo_whatssap
-                                                    }
-                                                >
-                                                    Link de Curso...
-                                                </a>
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Version del Curso :{" "}
-                                            <span>
-                                                {lastSeminario.det_version}
-                                            </span>
-                                        </p>
-                                        {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
-                {/* End  Modal for Blog-2 */}
+                        {/* End modal box news */}
+                    </Modal>
+                )}
             </>
         );
     }
+    if (institucion && categoria === TIPOS.AVISOS && !loading_convocatorias) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_avisos = () => {
+            if (search.length === 0) {
+                return convocatorias
+                    .filter(
+                        (e) =>
+                            e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.AVISOS
+                    )
+                    .slice(currentPage, currentPage + 6);
+            }
+            return convocatorias
+                .filter(
+                    (e) =>
+                        e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.AVISOS &&
+                        e.con_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                convocatorias.filter(
+                    (e) =>
+                        e.tipo_conv_comun.tipo_conv_comun_titulo ===
+                            TIPOS.AVISOS &&
+                        e.con_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_avisos().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${item.con_foto_portada}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.con_fecha_inicio)}{" "}
+                                        -{" "}
+                                        {
+                                            item.tipo_conv_comun
+                                                .tipo_conv_comun_titulo
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{item.con_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${selectedConvocatoria.con_foto_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.con_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.con_fecha_inicio
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCIÓN</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.con_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.con_fecha_inicio
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.con_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    // cursos y seminarios
+    if (institucion && categoria === TIPOS.CURSOS && !loading_cursos) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return cursos
+                    .filter(
+                        (e) =>
+                            e.tipo_curso_otro.tipo_conv_curso_nombre ===
+                            TIPOS.CURSOS
+                    )
+                    .slice(currentPage, currentPage + 6);
+            }
+            return cursos
+                .filter(
+                    (e) =>
+                        e.tipo_curso_otro.tipo_conv_curso_nombre ===
+                            TIPOS.CURSOS &&
+                        e.det_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                cursos.filter(
+                    (e) =>
+                        e.tipo_curso_otro.tipo_conv_curso_nombre ===
+                            TIPOS.CURSOS &&
+                        e.det_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Cursos/${item.det_img_portada}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.det_fecha_ini)} -{" "}
+                                        {
+                                            item.tipo_curso_otro
+                                                .tipo_conv_curso_nombre
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{item.det_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Cursos/${selectedConvocatoria.det_img_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.det_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.det_fecha_ini
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.det_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Costo para
+                                                            estudiantes :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_costo
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Costo para
+                                                            Extranjeros :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_costo_ext
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Costo para
+                                                            Profesionales :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_costo_profe
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Cupos disponibles :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_cupo_max
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Carga Horaria :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_carga_horaria
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Lugar de
+                                                            Capacitacion :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_lugar_curso
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Modalidad :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_modalidad
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.det_fecha_ini
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.det_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Hora de Inicio :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_hora_ini
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Enlace de WhatsApp :{" "}
+                                                            <span>
+                                                                <a
+                                                                    style={{
+                                                                        color: "var(--color-primario)",
+                                                                    }}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    href={
+                                                                        selectedConvocatoria.det_grupo_whatssap
+                                                                    }
+                                                                >
+                                                                    Link de
+                                                                    Curso...
+                                                                </a>
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Version del Curso :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_version
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (institucion && categoria === TIPOS.SEMINARIOS && !loading_cursos) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return cursos
+                    .filter(
+                        (e) =>
+                            e.tipo_curso_otro.tipo_conv_curso_nombre ===
+                            TIPOS.SEMINARIOS
+                    )
+                    .slice(currentPage, currentPage + 6);
+            }
+            return cursos
+                .filter(
+                    (e) =>
+                        e.tipo_curso_otro.tipo_conv_curso_nombre ===
+                            TIPOS.SEMINARIOS &&
+                        e.det_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                cursos.filter(
+                    (e) =>
+                        e.tipo_curso_otro.tipo_conv_curso_nombre ===
+                            TIPOS.SEMINARIOS &&
+                        e.det_titulo
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Cursos/${item.det_img_portada}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.det_fecha_ini)} -{" "}
+                                        {
+                                            item.tipo_curso_otro
+                                                .tipo_conv_curso_nombre
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{item.det_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Cursos/${selectedConvocatoria.det_img_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.det_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.det_fecha_ini
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.det_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Costo para
+                                                            estudiantes :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_costo
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Costo para
+                                                            Extranjeros :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_costo_ext
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Costo para
+                                                            Profesionales :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_costo_profe
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Cupos disponibles :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_cupo_max
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Carga Horaria :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_carga_horaria
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Lugar de
+                                                            Capacitacion :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_lugar_curso
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Modalidad :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_modalidad
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.det_fecha_ini
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.det_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Hora de Inicio :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_hora_ini
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Enlace de WhatsApp :{" "}
+                                                            <span>
+                                                                <a
+                                                                    style={{
+                                                                        color: "var(--color-primario)",
+                                                                    }}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    href={
+                                                                        selectedConvocatoria.det_grupo_whatssap
+                                                                    }
+                                                                >
+                                                                    Link de
+                                                                    Curso...
+                                                                </a>
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Version del Curso :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.det_version
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (institucion && categoria === TIPOS.SERVICIOS && !loading_servicios) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return servicios.slice(currentPage, currentPage + 6);
+            }
+            return servicios
+                .filter((e) =>
+                    e.serv_nombre.toLowerCase().includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                servicios.filter((e) =>
+                    e.serv_nombre.toLowerCase().includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Carrera/Servicios/${item.serv_imagen}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.serv_registro)} -{" "}
+                                        {TIPOS.SERVICIOS}
+                                    </div>
+                                    <h6>
+                                        <a>{item.serv_nombre}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Carrera/Servicios/${selectedConvocatoria.serv_imagen}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.serv_nombre
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.serv_registro
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.serv_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS DEL SERVICIO
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            celular :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.serv_nro_celular
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            inicio del servicio
+                                                            :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.serv_registro
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (
+        institucion &&
+        categoria === TIPOS.OFERTAS_ACADEMICAS &&
+        !loading_ofertas
+    ) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return ofertas.slice(currentPage, currentPage + 6);
+            }
+            return ofertas
+                .filter((e) =>
+                    e.ofertas_titulo
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                ofertas.filter((e) =>
+                    e.ofertas_titulo
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Carrera/OfertasAcademicas/${item.ofertas_imagen}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(
+                                            item.ofertas_fecha_creacion
+                                        )}{" "}
+                                        - {TIPOS.OFERTAS_ACADEMICAS}
+                                    </div>
+                                    <h6>
+                                        <a>{item.ofertas_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Carrera/OfertasAcademicas/${selectedConvocatoria.ofertas_imagen}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.ofertas_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.ofertas_fecha_creacion
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.ofertas_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS DEL SERVICIO
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Inicio de la Oferta
+                                                            :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.ofertas_inscripciones_ini
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fin de la Oferta :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.ofertas_inscripciones_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Examen :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.ofertas_fecha_examen
+                                                                )}
+                                                            </span>{" "}
+                                                        </p>
+                                                        <p>
+                                                            Referencia de la
+                                                            Oferta :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.ofertas_referencia
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <ul className="nav tag-cloud">
+                                                            <li href="#">
+                                                                Convocatorias
+                                                            </li>
+                                                            <li href="#">
+                                                                Comunicados
+                                                            </li>
+                                                            <li href="#">
+                                                                Avisos
+                                                            </li>
+                                                            <li href="#">
+                                                                Cursos
+                                                            </li>
+                                                            <li href="#">
+                                                                Seminarios
+                                                            </li>
+                                                            <li href="#">
+                                                                Servicios
+                                                            </li>
+                                                            <li href="#">
+                                                                Ofertas
+                                                                Académicas
+                                                            </li>
+                                                            <li href="#">
+                                                                Publicaciones
+                                                            </li>
+                                                            <li href="#">
+                                                                Gacetas
+                                                            </li>
+                                                            <li href="#">
+                                                                Eventos
+                                                            </li>
+                                                            <li href="#">
+                                                                Videos
+                                                            </li>
+                                                        </ul>
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+
+    return null;
 };
 
 export default Blog;
