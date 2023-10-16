@@ -4,6 +4,8 @@ import { getStaticDataIndex } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import RandomImage from "../../utils/RandomImage";
 import { NavLink } from "react-router-dom";
+import { TIPOS } from "../../types/types";
+import RedesAnimation from "../RedesAnimation";
 
 const Slider = ({ title, institucion = null }) => {
     // obtención de información estática
@@ -20,7 +22,18 @@ const Slider = ({ title, institucion = null }) => {
             institucion_iniciales,
             portada,
         } = institucion;
-        const { txt_content_banner_two } = staticData;
+        const { txt_content_banner_three } = staticData;
+
+        if (title === TIPOS.CALENDARIO) title = "CALENDARIO ACADÉMICO";
+        if (title === TIPOS.HORARIO) title = "HORARIO ACADÉMICO";
+        if (title === TIPOS.PLANESTUDIO) title = "PLAN DE ESTUDIO";
+        if (title === TIPOS.REGLAMENTO)
+            title = "REGLAMENTO Y MODO DE GRADUACIÓN";
+        if (title === TIPOS.PASANTIAS) title = "PASANTÍAS INSTITUCIONALES";
+        if (title === TIPOS.CONVENIOS) title = "CONVENIOS INSTITUCIONALES";
+        if (title === TIPOS.TRABAJOS) title = "TRABAJOS DIRIGIDOS";
+        if (title === TIPOS.INSTITUTO) title = "INSTITUTO DE INVESTIGACIÓN";
+
         const sliderContent = {
             iniciales: institucion_iniciales,
             name: title,
@@ -28,7 +41,7 @@ const Slider = ({ title, institucion = null }) => {
             txt_1: "Análisis",
             txt_2: "Diseño",
             txt_3: "Ejecución",
-            description: txt_content_banner_two,
+            description: txt_content_banner_three,
             btnText: "Categorias",
         };
         const conctInfo = {
@@ -44,10 +57,10 @@ const Slider = ({ title, institucion = null }) => {
                 <section id="home" className="home-banner">
                     <div className="hb-top-fixed d-flex">
                         <div className="hb-info">
-                            <a href="tel:+04 6545-9535-6515">
+                            <a href={`tel:${conctInfo.phone}`}>
                                 {conctInfo.phone}
                             </a>
-                            <a href="mailto:mail%20to:ibthemes21@gmail.com,com">
+                            <a href={`mailto:mail${conctInfo.email}`}>
                                 {conctInfo.email}
                             </a>
                         </div>
@@ -92,16 +105,29 @@ const Slider = ({ title, institucion = null }) => {
                                         data-aos-delay="200"
                                     >
                                         <TextLoop>
-                                            <p className="loop-text lead">
-                                                {sliderContent.txt_1}
+                                            <p
+                                                className="loop-text lead"
+                                                style={{
+                                                    fontSize: "3em",
+                                                }}
+                                            >
+                                                - {sliderContent.txt_1} -
                                             </p>
-                                            <p className="loop-text lead">
-                                                {" "}
-                                                {sliderContent.txt_2}
+                                            <p
+                                                className="loop-text lead"
+                                                style={{
+                                                    fontSize: "3em",
+                                                }}
+                                            >
+                                                - {sliderContent.txt_2} -
                                             </p>
-                                            <p className="loop-text lead">
-                                                {" "}
-                                                {sliderContent.txt_3}
+                                            <p
+                                                className="loop-text lead"
+                                                style={{
+                                                    fontSize: "3em",
+                                                }}
+                                            >
+                                                - {sliderContent.txt_3} -
                                             </p>
                                         </TextLoop>
                                     </div>
@@ -133,12 +159,28 @@ const Slider = ({ title, institucion = null }) => {
                         </div>
                     </div>
                     {/* End Container*/}
+
                     <div
-                        className="hb-me"
+                        className="hb-me animation_blob"
                         style={{
                             backgroundImage: `url(${img})`,
                         }}
-                    ></div>
+                    >
+                        <RedesAnimation
+                            t="auto"
+                            r="auto"
+                            b="0px"
+                            l="0px"
+                            style={{ zIndex: "0" }}
+                        />
+                        <RedesAnimation
+                            t="0px"
+                            r="0px"
+                            b="auto"
+                            l="auto"
+                            style={{ zIndex: "0" }}
+                        />
+                    </div>
                 </section>
 
                 {/* End Home Banner  */}

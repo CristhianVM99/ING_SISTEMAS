@@ -12,6 +12,7 @@
     height: 100vh;
     background: $px-bg-3;
     border-right: 1px solid rgba($px-dark, 0.1);
+    z-index: 100;
     .theme-light & {
         background: $px-white;
     }
@@ -111,11 +112,24 @@
             }
             .sub-menu {
                 position: absolute;
-                background: red;
                 left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
                 width: 80px;
-                height: 80px;
                 padding: 10px 0;
+                z-index: 1000;
+            }
+            .nav-link:hover {
+                color: $px-theme;
+            }
+            .nav-link:hover item {
+                color: $px-theme;
+            }
+            .sub-menu .nav-link {
+                background: $px-theme;
+            }
+            .sub-menu .nav-link:hover {
+                background: $px-dark;
             }
             &.active {
                 .nav-link {

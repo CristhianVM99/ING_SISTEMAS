@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Contact from "../contact/Contact";
 import { TIPOS } from "../../types/types";
+import ReactPlayer from "react-player/youtube";
 import {
     getConvocatorias,
     getCursos,
@@ -14,6 +15,9 @@ import {
 } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { FaSearch } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import BlogNav from "./BlogNav";
+import { Document, Page, pdfjs } from "react-pdf";
 
 Modal.setAppElement("#root");
 
@@ -66,6 +70,10 @@ const Blog = ({ categoria, institucion = null }) => {
         queryFn: getVideos,
     });
 
+    useEffect(() => {
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+    });
+
     const [isOpen, setIsOpen] = useState(false);
     const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
@@ -100,16 +108,6 @@ const Blog = ({ categoria, institucion = null }) => {
 
         return `${día} de ${mes} de ${año}`;
     }
-
-    // function convertirHora(hora24) {
-    //     const [hora, minutos] = hora24.split(":");
-    //     const horaNum = parseInt(hora, 10);
-    //     const periodo = horaNum >= 12 ? "PM" : "AM";
-    //     const hora12 =
-    //         horaNum > 12 ? horaNum - 12 : horaNum === 0 ? 12 : horaNum;
-    //     const horaFormateada = `${hora12}:${minutos} ${periodo}`;
-    //     return horaFormateada;
-    // }
 
     const prevPage = () => {
         if (currentPage > 0) setCurrentPage(currentPage - 6);
@@ -323,42 +321,11 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>
@@ -579,42 +546,11 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>
@@ -831,42 +767,11 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>
@@ -1177,42 +1082,11 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>
@@ -1522,42 +1396,11 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>
@@ -1755,42 +1598,11 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>
@@ -2015,42 +1827,820 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             </span>
                                                         </p>
                                                         {/* End article content */}
-                                                        <ul className="nav tag-cloud">
-                                                            <li href="#">
-                                                                Convocatorias
-                                                            </li>
-                                                            <li href="#">
-                                                                Comunicados
-                                                            </li>
-                                                            <li href="#">
-                                                                Avisos
-                                                            </li>
-                                                            <li href="#">
-                                                                Cursos
-                                                            </li>
-                                                            <li href="#">
-                                                                Seminarios
-                                                            </li>
-                                                            <li href="#">
-                                                                Servicios
-                                                            </li>
-                                                            <li href="#">
-                                                                Ofertas
-                                                                Académicas
-                                                            </li>
-                                                            <li href="#">
-                                                                Publicaciones
-                                                            </li>
-                                                            <li href="#">
-                                                                Gacetas
-                                                            </li>
-                                                            <li href="#">
-                                                                Eventos
-                                                            </li>
-                                                            <li href="#">
-                                                                Videos
-                                                            </li>
-                                                        </ul>
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (
+        institucion &&
+        categoria === TIPOS.PUBLICACIONES &&
+        !loading_publicaciones
+    ) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return publicaciones.slice(currentPage, currentPage + 6);
+            }
+            return publicaciones
+                .filter((e) =>
+                    e.publicaciones_titulo
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                publicaciones.filter((e) =>
+                    e.publicaciones_titulo
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Publicaciones/${item.publicaciones_imagen}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(
+                                            item.publicaciones_fecha
+                                        )}{" "}
+                                        - {TIPOS.PUBLICACIONES}
+                                    </div>
+                                    <h6>
+                                        <a>{item.publicaciones_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Publicaciones/${selectedConvocatoria.publicaciones_imagen}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.publicaciones_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.publicaciones_fecha
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.publicaciones_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS DE LA
+                                                            PUBLICACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de Publicacion
+                                                            :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.publicaciones_fecha
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Autor :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.publicaciones_autor
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Documento :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.publicaciones_documento
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (institucion && categoria === TIPOS.GACETAS && !loading_gacetas) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return gacetas.slice(currentPage, currentPage + 6);
+            }
+            return gacetas
+                .filter((e) =>
+                    e.gaceta_titulo.toLowerCase().includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                gacetas.filter((e) =>
+                    e.gaceta_titulo.toLowerCase().includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div
+                                    className="blog-img"
+                                    style={{ height: "480px" }}
+                                >
+                                    <Document
+                                        file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                    >
+                                        <Page pageNumber={1} width="360" />
+                                    </Document>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.gaceta_fecha)} -{" "}
+                                        {TIPOS.GACETAS}
+                                    </div>
+                                    <h6>
+                                        <a>{item.gaceta_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <Document
+                                                file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${selectedConvocatoria.gaceta_documento}`}
+                                            >
+                                                <Page
+                                                    pageNumber={1}
+                                                    width="940"
+                                                />
+                                            </Document>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.gaceta_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.gaceta_fecha
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS DE LA GACETA
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de Publicacion
+                                                            de la gaceta :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.gaceta_fecha
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <a
+                                                            href={`${process.env.REACT_APP_ROOT_API}/Gaceta/${selectedConvocatoria.gaceta_documento}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            <button className="px-btn px-btn-white content-btn-btn">
+                                                                Descargar PDF
+                                                            </button>
+                                                        </a>
+                                                        {/* End article content */}
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (institucion && categoria === TIPOS.EVENTOS && !loading_eventos) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return eventos.slice(currentPage, currentPage + 6);
+            }
+            return eventos
+                .filter((e) =>
+                    e.evento_titulo.toLowerCase().includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                eventos.filter((e) =>
+                    e.evento_titulo.toLowerCase().includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Eventos/${item.evento_imagen}`}
+                                            alt="blog post"
+                                        ></img>
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.evento_fecha)} -{" "}
+                                        {TIPOS.EVENTOS}
+                                    </div>
+                                    <h6>
+                                        <a>{item.evento_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Eventos/${selectedConvocatoria.evento_imagen}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.evento_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.evento_fecha
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.publicaciones_descripcion,
+                                                            }}
+                                                        ></div>{" "}
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.evento_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS DEL EVENTO
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha del Evento :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.evento_fecha
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Hora del Evento :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.evento_hora
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Lugar del Evento :{" "}
+                                                            <span>
+                                                                {
+                                                                    selectedConvocatoria.evento_lugar
+                                                                }
+                                                            </span>
+                                                        </p>
+                                                        {/* End article content */}
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (institucion && categoria === TIPOS.VIDEOS && !loading_videos) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return videos.slice(currentPage, currentPage + 6);
+            }
+            return videos
+                .filter((e) =>
+                    e.video_titulo.toLowerCase().includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                videos.filter((e) =>
+                    e.video_titulo.toLowerCase().includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <ReactPlayer
+                                            url={item.video_enlace}
+                                            className="react-player"
+                                            width="100%"
+                                        />
+                                    </a>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">{TIPOS.VIDEOS}</div>
+                                    <h6>
+                                        <a>{item.video_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <ReactPlayer
+                                                url={
+                                                    selectedConvocatoria.video_enlace
+                                                }
+                                                className="react-player"
+                                                width="100%"
+                                            />
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.video_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <hr />
+                                                        <h5>DESCRIPCION</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: selectedConvocatoria.video_breve_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        {/* End article content */}
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
                                                         {/* End tag */}
                                                     </div>
                                                 </div>

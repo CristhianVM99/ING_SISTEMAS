@@ -1,54 +1,80 @@
 import React from "react";
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-  FaPinterestP,
-} from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
 
-const SocialShare = [
-  { Social: <FaFacebookF />, link: "https://www.facebook.com/" },
-  { Social: <FaTwitter />, link: "https://www.linkedin.com/" },
-  { Social: <FaInstagram />, link: "https://www.instagram.com/" },
-  { Social: <FaLinkedinIn />, link: "https://twitter.com/" },
-  { Social: <FaPinterestP />, link: "https://www.pinterest.com/" },
-];
+const FooterAnimation = ({ institucion = null }) => {
+    if (institucion) {
+        /* DATOS DE LA INSTITUCION */
+        const {
+            institucion_nombre,
+            institucion_facebook,
+            institucion_youtube,
+            institucion_twitter,
+        } = institucion;
 
-const Footer = () => {
-  return (
-    <>
-      <div className="row align-items-center">
-        <div className="col-md-6 my-2">
-          <div className="nav justify-content-center justify-content-md-start">
-            {SocialShare.map((val, i) => (
-              <a key={i} href={`${val.link}`} rel="noreferrer" target="_blank">
-                {val.Social}
-              </a>
-            ))}
-          </div>
-          {/* End .nav */}
-        </div>
-        {/* End .col */}
+        const SocialShare = [
+            { Social: <FaFacebookF />, link: institucion_facebook },
+            { Social: <FaTwitter />, link: institucion_twitter },
+            { Social: <FaYoutube />, link: institucion_youtube },
+        ];
 
-        <div className="col-md-6 my-2 text-center text-md-end">
-          <p>
-            © {new Date().getFullYear()} copyright{" "}
-            <a
-              href="https://themeforest.net/user/ib-themes/portfolio"
-              target="_blank"
-              rel="noreferrer"
-            >
-              ib-themes
-            </a>{" "}
-            all right reserved
-          </p>
-        </div>
-        {/* End .col */}
-      </div>
-      {/* End .row */}
-    </>
-  );
+        return (
+            <>
+                <div className="row align-items-center">
+                    <div className="col-md-6 my-2">
+                        <div className="nav justify-content-center justify-content-md-start">
+                            <span style={{ paddingRight: "20px" }}>
+                                {institucion_nombre}
+                            </span>
+                            {SocialShare.map((val, i) => (
+                                <a
+                                    key={i}
+                                    href={`${val.link}`}
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    {val.Social}
+                                </a>
+                            ))}
+                        </div>
+                        {/* End .nav */}
+                    </div>
+                    {/* End .col */}
+
+                    <div className="col-md-6 my-2 text-center text-md-end">
+                        <p>
+                            <span className="copyrights-text">
+                                © Universidad Pública de El Alto{" "}
+                                {new Date().getFullYear()} - Todos los derechos
+                                reservados.
+                                <br />
+                                web developer{" "}
+                                <a
+                                    href="https://www.linkedin.com/in/cristhian-vm"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ color: "#00B4DB" }}
+                                >
+                                    by CristhianVM
+                                </a>{" "}
+                                |{" "}
+                                <a
+                                    href="https://sie.upea.bo/l"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ color: "#F9BF26" }}
+                                >
+                                    SIE{" "}
+                                </a>{" "}
+                            </span>
+                        </p>
+                    </div>
+                    {/* End .col */}
+                </div>
+                {/* End .row */}
+            </>
+        );
+    }
+    return null;
 };
 
-export default Footer;
+export default FooterAnimation;

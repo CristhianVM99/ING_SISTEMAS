@@ -196,7 +196,6 @@ const About = ({ institucion = null }) => {
                         {/* End separated */}
 
                         <div className="title">
-                            http://localhost:3000/Recurso
                             <h3>Enlaces Virtuales</h3>
                         </div>
 

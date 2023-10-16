@@ -55,7 +55,7 @@ const SliderTwo = ({ institucion = null }) => {
                                     detectsOn: "canvas",
                                     events: {
                                         onClick: {
-                                            enable: false,
+                                            enable: true,
                                             mode: "push",
                                         },
                                         onHover: {
@@ -72,10 +72,10 @@ const SliderTwo = ({ institucion = null }) => {
                                             size: 40,
                                         },
                                         push: {
-                                            quantity: 4,
+                                            quantity: 1,
                                         },
                                         repulse: {
-                                            distance: 200,
+                                            distance: 100,
                                             duration: 0.4,
                                         },
                                     },
@@ -154,16 +154,31 @@ const SliderTwo = ({ institucion = null }) => {
                                         data-aos-delay="200"
                                     >
                                         <TextLoop>
-                                            <p className="loop-text lead">
+                                            <p
+                                                className="loop-text lead"
+                                                style={{
+                                                    fontSize: "3em",
+                                                }}
+                                            >
                                                 {" "}
-                                                {sliderContent.txt_1}
+                                                -{sliderContent.txt_1}-
                                             </p>
-                                            <p className="loop-text lead">
-                                                {sliderContent.txt_2}
+                                            <p
+                                                className="loop-text lead"
+                                                style={{
+                                                    fontSize: "3em",
+                                                }}
+                                            >
+                                                -{sliderContent.txt_2}-
                                             </p>
-                                            <p className="loop-text lead">
+                                            <p
+                                                className="loop-text lead"
+                                                style={{
+                                                    fontSize: "3em",
+                                                }}
+                                            >
                                                 {" "}
-                                                {sliderContent.txt_3}
+                                                -{sliderContent.txt_3}-
                                             </p>
                                         </TextLoop>
                                     </div>

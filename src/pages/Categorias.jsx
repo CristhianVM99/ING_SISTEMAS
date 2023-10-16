@@ -33,16 +33,16 @@ const Categorias = () => {
             <section id="work" className="section theme-light dark-bg">
                 <div className="container">
                     <div className="title">
-                        <h3>My Portfolio.</h3>
+                        <h3>Categorias</h3>
                     </div>
-                    <Portfolio />
+                    <Portfolio institucion={institucion} />
                 </div>
             </section>
             {/* End Portfolio Section */}
 
             <footer className="footer white">
                 <div className="container">
-                    <Footer />
+                    <Footer institucion={institucion} />
                 </div>
             </footer>
             {/* End Contact Section */}

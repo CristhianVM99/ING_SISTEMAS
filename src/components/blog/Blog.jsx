@@ -4,6 +4,7 @@ import Contact from "../contact/Contact";
 import { TIPOS } from "../../types/types";
 import { getConvocatorias, getCursos } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
+import BlogNav from "./BlogNav";
 
 Modal.setAppElement("#root");
 
@@ -236,7 +237,7 @@ const Blog = ({ categoria, institucion = null }) => {
                                 <div className="blog-grid">
                                     <div className="blog-img">
                                         <img
-                                            src={`${process.env.REACT_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
                                             style={{ width: "100%" }}
                                             alt="blog post"
                                         ></img>
@@ -263,52 +264,39 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             lastConvocatoria.con_fecha_inicio
                                                         )}
                                                     </span>
+                                                    <hr />
+                                                    <h5>DESCRIPCIÓN</h5>
+                                                    <hr />
+                                                    <div
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: lastConvocatoria.con_descripcion,
+                                                        }}
+                                                    ></div>
+                                                    <hr />
+                                                    <h5>DATOS E INFORMACIÓN</h5>
+                                                    <hr />
+                                                    <p>
+                                                        Fecha de inicio :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastConvocatoria.con_fecha_inicio
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Fin :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastConvocatoria.con_fecha_fin
+                                                            )}
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                         {/* End .article-title */}
-
-                                        <hr />
-                                        <h5>DESCRIPCIÓN</h5>
-                                        <hr />
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastConvocatoria.con_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Fecha de inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastConvocatoria.con_fecha_inicio
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastConvocatoria.con_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
                                         {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
+                                        <BlogNav setIsOpen={setIsOpen} />
                                         {/* End tag */}
                                     </article>
                                     {/* End Article */}
@@ -368,52 +356,39 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             lastComunicado.con_fecha_inicio
                                                         )}
                                                     </span>
+                                                    <hr />
+                                                    <h5>DESCRIPCIÓN</h5>
+                                                    <hr />
+                                                    <div
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: lastComunicado.con_descripcion,
+                                                        }}
+                                                    ></div>
+                                                    <hr />
+                                                    <h5>DATOS E INFORMACIÓN</h5>
+                                                    <hr />
+                                                    <p>
+                                                        Fecha de inicio :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastComunicado.con_fecha_inicio
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Fin :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastComunicado.con_fecha_fin
+                                                            )}
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                         {/* End .article-title */}
-
-                                        <hr />
-                                        <h5>DESCRIPCIÓN</h5>
-                                        <hr />
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastComunicado.con_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Fecha de inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastComunicado.con_fecha_inicio
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastComunicado.con_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
                                         {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
+                                        <BlogNav setIsOpen={setIsOpen} />
                                         {/* End tag */}
                                     </article>
                                     {/* End Article */}
@@ -473,52 +448,39 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             lastAviso.con_fecha_inicio
                                                         )}
                                                     </span>
+                                                    <hr />
+                                                    <h5>DESCRIPCIÓN</h5>
+                                                    <hr />
+                                                    <div
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: lastAviso.con_descripcion,
+                                                        }}
+                                                    ></div>
+                                                    <hr />
+                                                    <h5>DATOS E INFORMACIÓN</h5>
+                                                    <hr />
+                                                    <p>
+                                                        Fecha de inicio :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastAviso.con_fecha_inicio
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Fin :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastAviso.con_fecha_fin
+                                                            )}
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                         {/* End .article-title */}
-
-                                        <hr />
-                                        <h5>DESCRIPCIÓN</h5>
-                                        <hr />
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastAviso.con_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Fecha de inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastAviso.con_fecha_inicio
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastAviso.con_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
                                         {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
+                                        <BlogNav setIsOpen={setIsOpen} />
                                         {/* End tag */}
                                     </article>
                                     {/* End Article */}
@@ -659,121 +621,130 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             lastCurso.det_fecha_ini
                                                         )}
                                                     </span>
+                                                    <h5>DESCRIPCION</h5>
+                                                    <hr />
+                                                    <div
+                                                        className="article-content"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: lastCurso.det_descripcion,
+                                                        }}
+                                                    ></div>
+                                                    <hr />
+                                                    <h5>DATOS E INFORMACIÓN</h5>
+                                                    <hr />
+                                                    <p>
+                                                        Costo para estudiantes :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_costo
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Costo para Extranjeros :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_costo_ext
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Costo para Profesionales
+                                                        :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_costo_profe
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Cupos disponibles :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_cupo_max
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Carga Horaria :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_carga_horaria
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Lugar de Capacitacion :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_lugar_curso
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Modalidad :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_modalidad
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Inicio :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastCurso.det_fecha_ini
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Fin :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastCurso.det_fecha_fin
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Hora de Inicio :{" "}
+                                                        <span>
+                                                            {convertirHora(
+                                                                lastCurso.det_hora_ini
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Enlace de WhatsApp :{" "}
+                                                        <span>
+                                                            <a
+                                                                style={{
+                                                                    color: "var(--color-primario)",
+                                                                }}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                href={
+                                                                    lastCurso.det_grupo_whatssap
+                                                                }
+                                                            >
+                                                                Link de Curso...
+                                                            </a>
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Version del Curso :{" "}
+                                                        <span>
+                                                            {
+                                                                lastCurso.det_version
+                                                            }
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                         {/* End .article-title */}
 
-                                        <h5>DESCRIPCION</h5>
-                                        <hr />
-                                        <div
-                                            className="article-content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastCurso.det_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Costo para estudiantes :{" "}
-                                            <span>{lastCurso.det_costo}</span>
-                                        </p>
-                                        <p>
-                                            Costo para Extranjeros :{" "}
-                                            <span>
-                                                {lastCurso.det_costo_ext}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Costo para Profesionales :{" "}
-                                            <span>
-                                                {lastCurso.det_costo_profe}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Cupos disponibles :{" "}
-                                            <span>
-                                                {lastCurso.det_cupo_max}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Carga Horaria :{" "}
-                                            <span>
-                                                {lastCurso.det_carga_horaria}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Lugar de Capacitacion :{" "}
-                                            <span>
-                                                {lastCurso.det_lugar_curso}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Modalidad :{" "}
-                                            <span>
-                                                {lastCurso.det_modalidad}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastCurso.det_fecha_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastCurso.det_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Hora de Inicio :{" "}
-                                            <span>
-                                                {convertirHora(
-                                                    lastCurso.det_hora_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Enlace de WhatsApp :{" "}
-                                            <span>
-                                                <a
-                                                    style={{
-                                                        color: "var(--color-primario)",
-                                                    }}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href={
-                                                        lastCurso.det_grupo_whatssap
-                                                    }
-                                                >
-                                                    Link de Curso...
-                                                </a>
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Version del Curso :{" "}
-                                            <span>{lastCurso.det_version}</span>
-                                        </p>
                                         {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
+                                        <BlogNav setIsOpen={setIsOpen} />
                                         {/* End tag */}
                                     </article>
                                     {/* End Article */}
@@ -833,127 +804,130 @@ const Blog = ({ categoria, institucion = null }) => {
                                                             lastSeminario.det_fecha_ini
                                                         )}
                                                     </span>
+                                                    <h5>DESCRIPCION</h5>
+                                                    <hr />
+                                                    <div
+                                                        className="article-content"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: lastSeminario.det_descripcion,
+                                                        }}
+                                                    ></div>
+                                                    <hr />
+                                                    <h5>DATOS E INFORMACIÓN</h5>
+                                                    <hr />
+                                                    <p>
+                                                        Costo para estudiantes :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_costo
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Costo para Extranjeros :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_costo_ext
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Costo para Profesionales
+                                                        :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_costo_profe
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Cupos disponibles :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_cupo_max
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Carga Horaria :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_carga_horaria
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Lugar de Capacitacion :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_lugar_curso
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Modalidad :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_modalidad
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Inicio :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastSeminario.det_fecha_ini
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Fecha de Fin :{" "}
+                                                        <span>
+                                                            {formatearFecha(
+                                                                lastSeminario.det_fecha_fin
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Hora de Inicio :{" "}
+                                                        <span>
+                                                            {convertirHora(
+                                                                lastSeminario.det_hora_ini
+                                                            )}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Enlace de WhatsApp :{" "}
+                                                        <span>
+                                                            <a
+                                                                style={{
+                                                                    color: "var(--color-primario)",
+                                                                }}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                href={
+                                                                    lastSeminario.det_grupo_whatssap
+                                                                }
+                                                            >
+                                                                Link de Curso...
+                                                            </a>
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        Version del Curso :{" "}
+                                                        <span>
+                                                            {
+                                                                lastSeminario.det_version
+                                                            }
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                         {/* End .article-title */}
 
-                                        <h5>DESCRIPCION</h5>
-                                        <hr />
-                                        <div
-                                            className="article-content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: lastSeminario.det_descripcion,
-                                            }}
-                                        ></div>
-                                        <hr />
-                                        <h5>DATOS E INFORMACIÓN</h5>
-                                        <hr />
-                                        <p>
-                                            Costo para estudiantes :{" "}
-                                            <span>
-                                                {lastSeminario.det_costo}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Costo para Extranjeros :{" "}
-                                            <span>
-                                                {lastSeminario.det_costo_ext}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Costo para Profesionales :{" "}
-                                            <span>
-                                                {lastSeminario.det_costo_profe}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Cupos disponibles :{" "}
-                                            <span>
-                                                {lastSeminario.det_cupo_max}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Carga Horaria :{" "}
-                                            <span>
-                                                {
-                                                    lastSeminario.det_carga_horaria
-                                                }
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Lugar de Capacitacion :{" "}
-                                            <span>
-                                                {lastSeminario.det_lugar_curso}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Modalidad :{" "}
-                                            <span>
-                                                {lastSeminario.det_modalidad}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Inicio :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastSeminario.det_fecha_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Fecha de Fin :{" "}
-                                            <span>
-                                                {formatearFecha(
-                                                    lastSeminario.det_fecha_fin
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Hora de Inicio :{" "}
-                                            <span>
-                                                {convertirHora(
-                                                    lastSeminario.det_hora_ini
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Enlace de WhatsApp :{" "}
-                                            <span>
-                                                <a
-                                                    style={{
-                                                        color: "var(--color-primario)",
-                                                    }}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href={
-                                                        lastSeminario.det_grupo_whatssap
-                                                    }
-                                                >
-                                                    Link de Curso...
-                                                </a>
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Version del Curso :{" "}
-                                            <span>
-                                                {lastSeminario.det_version}
-                                            </span>
-                                        </p>
                                         {/* End article content */}
-                                        <ul className="nav tag-cloud">
-                                            <li href="#">Convocatorias</li>
-                                            <li href="#">Comunicados</li>
-                                            <li href="#">Avisos</li>
-                                            <li href="#">Cursos</li>
-                                            <li href="#">Seminarios</li>
-                                            <li href="#">Servicios</li>
-                                            <li href="#">Ofertas Académicas</li>
-                                            <li href="#">Publicaciones</li>
-                                            <li href="#">Gacetas</li>
-                                            <li href="#">Eventos</li>
-                                            <li href="#">Videos</li>
-                                        </ul>
+                                        <BlogNav setIsOpen={setIsOpen} />
                                         {/* End tag */}
                                     </article>
                                     {/* End Article */}

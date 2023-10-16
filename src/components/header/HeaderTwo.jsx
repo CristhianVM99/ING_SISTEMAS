@@ -7,14 +7,116 @@ import {
     FiFileText,
     FiPhoneOutgoing,
 } from "react-icons/fi";
-import { FaHome, FaBlog } from "react-icons/fa";
+import {
+    FaHome,
+    FaBlog,
+    FaInfoCircle,
+    FaQuestionCircle,
+    FaGraduationCap,
+    FaUniversity,
+    FaBell,
+    FaFileAlt,
+    FaEnvelope,
+    FaPlus,
+    FaDesktop,
+    FaLink,
+    FaExternalLinkAlt,
+    FaCog,
+    FaBook,
+    FaPaperPlane,
+    FaNewspaper,
+    FaCalendar,
+    FaPlayCircle,
+    FaTools,
+    FaBriefcase,
+    FaHandshake,
+    FaFlask,
+    FaUserTie,
+    FaBullhorn,
+    FaEnvelopeOpenText,
+    FaExclamationCircle,
+    FaChalkboardTeacher,
+    FaBookOpen,
+} from "react-icons/fa";
 import { TIPOS } from "../../types/types";
+import { getLinksInstExtAll } from "../../api/institucionAPI";
+import { useQuery } from "@tanstack/react-query";
 
 const HeaderTwo = ({ institucion = null }) => {
-    const [click, setClick] = useState(false);
-    const handleClick = () => setClick(!click);
+    /* OBTENCION DE INFORMACION DEL STORE LINKS  */
+    const { isLoading: loading_links_externos, data: links } = useQuery({
+        queryKey: ["links_externos"],
+        queryFn: getLinksInstExtAll,
+    });
 
-    if (institucion != null) {
+    const [click, setClick] = useState(false);
+    const [menuAcademia, setMenuAcademia] = useState(false);
+    const [menuInstitucion, setMenuInstitucion] = useState(false);
+    const [menuConvocatorias, setMenuConvocatorias] = useState(false);
+    const [menuEnlaces, setMenuEnlaces] = useState(false);
+    const [menuMas, setMenuMas] = useState(false);
+    const handleClick = () => setClick(!click);
+    const toogleSubMenuAcademia = () => {
+        setMenuAcademia(!menuAcademia);
+        setMenuInstitucion(false);
+        setMenuConvocatorias(false);
+        setMenuEnlaces(false);
+        setMenuMas(false);
+    };
+    const toogleSubMenuInstitucion = () => {
+        setMenuInstitucion(!menuInstitucion);
+        setMenuConvocatorias(false);
+        setMenuEnlaces(false);
+        setMenuMas(false);
+        setMenuAcademia(false);
+    };
+    const toogleSubMenuConvocatorias = () => {
+        setMenuConvocatorias(!menuConvocatorias);
+        setMenuInstitucion(false);
+        setMenuEnlaces(false);
+        setMenuMas(false);
+        setMenuAcademia(false);
+    };
+    const toogleSubMenuMas = () => {
+        setMenuMas(!menuMas);
+        setMenuInstitucion(false);
+        setMenuConvocatorias(false);
+        setMenuEnlaces(false);
+        setMenuAcademia(false);
+    };
+    const toogleSubMenuEnlaces = () => {
+        setMenuEnlaces(!menuEnlaces);
+        setMenuInstitucion(false);
+        setMenuConvocatorias(false);
+        setMenuMas(false);
+        setMenuAcademia(false);
+    };
+    const resetNav = () => {
+        setMenuAcademia(false);
+        setMenuEnlaces(false);
+        setMenuInstitucion(false);
+        setMenuConvocatorias(false);
+        setMenuMas(false);
+        setMenuAcademia(false);
+    };
+
+    if (institucion && !loading_links_externos) {
+        /* TIPADO PARA LA FILTRACION PARA LOS LINKS QUE PERTENCEN AL NAV CON EL NOMBRE DE KARDEX */
+        const TIPO_LINK = {
+            KARDEX: "KARDEX",
+            BIBLIOTECA: "BIBLIOTECA",
+        };
+
+        /* FILTRADO DE LINKS QUE TENGAN EL TIPO 'KARDEX' y 'BIBLIOTECA' */
+        const links_filter = links.filter(
+            (e) => e.ei_tipo === TIPO_LINK.KARDEX
+        );
+        const links_biblioteca = links.filter(
+            (e) => e.ei_tipo === TIPO_LINK.BIBLIOTECA
+        );
+
+        const virtual = [...links_filter, ...links_biblioteca];
+
         const { institucion_logo } = institucion;
         return (
             <>
@@ -41,14 +143,14 @@ const HeaderTwo = ({ institucion = null }) => {
                     <div className="scroll-bar">
                         <div className="hl-top">
                             <div className="hl-logo">
-                                <NavLink to={`/`}>
+                                <NavLink to={`/`} onClick={resetNav}>
                                     <img
                                         width={70}
                                         src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
                                         alt="Inteshape"
                                         style={{
-                                            paddingTop: "5px",
-                                            paddingLeft: "5px",
+                                            paddingTop: "0px",
+                                            paddingLeft: "0px",
                                         }}
                                     />
                                 </NavLink>
@@ -56,24 +158,12 @@ const HeaderTwo = ({ institucion = null }) => {
                         </div>
                         {/* End htl-top */}
 
-                        <Scrollspy
-                            className="nav nav-menu"
-                            items={[
-                                "home",
-                                "about",
-                                "resume",
-                                "work",
-                                "blog",
-                                "contactus",
-                            ]}
-                            currentClassName="active"
-                            offset={-30}
-                        >
+                        <nav className="nav nav-menu">
                             <li>
                                 <NavLink
                                     className="nav-link "
                                     to={`/`}
-                                    onClick={handleClick}
+                                    onClick={resetNav}
                                 >
                                     <FaHome />
                                     <span className="item">Principal</span>
@@ -83,157 +173,325 @@ const HeaderTwo = ({ institucion = null }) => {
                                 <NavLink
                                     className="nav-link"
                                     to={`/SobreNosotros`}
-                                    onClick={handleClick}
+                                    onClick={resetNav}
                                 >
-                                    <FiUser />
-                                    <span className="item">Sobre Nosotros</span>
+                                    <FaQuestionCircle />
+                                    <span
+                                        className="item"
+                                        style={{ fontSize: "10px" }}
+                                    >
+                                        Sobre Nosotros
+                                    </span>
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink
+                                <span
                                     className="nav-link"
-                                    to={`/Academia`}
-                                    onClick={handleClick}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={toogleSubMenuAcademia}
                                 >
-                                    <FiFileText />
+                                    <FaGraduationCap />
                                     <span className="item">Academia</span>
-                                    <div className="sub-menu">
-                                        <span className="item">
-                                            Calendario Académico
-                                        </span>
-                                        {/* <span className="item">
-                                            Horario Académico
-                                        </span>
-                                        <span className="item">
-                                            Plan De Estudio
-                                        </span>
-                                        <span className="item">
-                                            Reglamento y Modo de Graduación
-                                        </span> */}
-                                    </div>
-                                </NavLink>
+                                    {menuAcademia && (
+                                        <div className="sub-menu">
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Academia/${TIPOS.CALENDARIO}`}
+                                            >
+                                                <FiFileText />
+                                                <span className="item">
+                                                    Calendario Académico
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Academia/${TIPOS.HORARIO}`}
+                                            >
+                                                <FiFileText />
+                                                <span className="item">
+                                                    Horario Académico
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Academia/${TIPOS.PLANESTUDIO}`}
+                                            >
+                                                <FiFileText />
+                                                <span className="item">
+                                                    Plan de Estudio
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Academia/${TIPOS.REGLAMENTO}`}
+                                            >
+                                                <FiFileText />
+                                                <span className="item">
+                                                    Reglamento y Mod. de
+                                                    Graduacion
+                                                </span>
+                                            </NavLink>
+                                        </div>
+                                    )}
+                                </span>
                             </li>
                             <li>
-                                <NavLink
+                                <span
                                     className="nav-link"
-                                    to={`/Instituto`}
-                                    onClick={handleClick}
+                                    onClick={toogleSubMenuInstitucion}
+                                    style={{ cursor: "pointer" }}
                                 >
-                                    <FiBriefcase />
+                                    <FaUniversity />
                                     <span className="item">Institucion</span>
-                                </NavLink>
+                                    {menuInstitucion && (
+                                        <div className="sub-menu">
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Instituto/${TIPOS.PASANTIAS}`}
+                                            >
+                                                <FaUserTie />
+                                                <span className="item">
+                                                    Pasantías
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Instituto/${TIPOS.CONVENIOS}`}
+                                            >
+                                                <FaHandshake />
+                                                <span className="item">
+                                                    Convenios
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Instituto/${TIPOS.TRABAJOS}`}
+                                            >
+                                                <FaBriefcase />
+                                                <span className="item">
+                                                    Trabajos Dirigidos
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Instituto/${TIPOS.INSTITUTO}`}
+                                            >
+                                                <FaFlask />
+                                                <span className="item">
+                                                    Instituto de Investigación
+                                                </span>
+                                            </NavLink>
+                                        </div>
+                                    )}
+                                </span>
                             </li>
                             <li>
-                                <NavLink
+                                <span
                                     className="nav-link"
-                                    to={`/Recurso/${TIPOS.CONVOCATORIAS}`}
-                                    onClick={handleClick}
+                                    onClick={toogleSubMenuConvocatorias}
+                                    style={{ cursor: "pointer" }}
                                 >
-                                    <FaBlog />
+                                    <FaFileAlt />
                                     <span
                                         className="item"
                                         style={{ fontSize: "10px" }}
                                     >
-                                        Convocatorias
+                                        Convocatorias, Comunicados y Avisos
                                     </span>
-                                </NavLink>
+                                    {menuConvocatorias && (
+                                        <div className="sub-menu">
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.CONVOCATORIAS}`}
+                                            >
+                                                <FaBullhorn />
+                                                <span className="item">
+                                                    Convocatorias
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.COMUNICADOS}`}
+                                            >
+                                                <FaEnvelopeOpenText />
+                                                <span className="item">
+                                                    Comunicados
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.AVISOS}`}
+                                            >
+                                                <FaExclamationCircle />
+                                                <span className="item">
+                                                    Avisos
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.CURSOS}`}
+                                            >
+                                                <FaGraduationCap />
+                                                <span className="item">
+                                                    Cursos
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.SEMINARIOS}`}
+                                            >
+                                                <FaChalkboardTeacher />
+                                                <span className="item">
+                                                    Seminarios
+                                                </span>
+                                            </NavLink>
+                                        </div>
+                                    )}
+                                </span>
                             </li>
                             <li>
-                                <NavLink
+                                <span
                                     className="nav-link"
-                                    to={`/Recurso/${TIPOS.COMUNICADOS}`}
-                                    onClick={handleClick}
+                                    onClick={toogleSubMenuMas}
+                                    style={{ cursor: "pointer" }}
                                 >
-                                    <FaBlog />
+                                    <FaPlus />
                                     <span
                                         className="item"
                                         style={{ fontSize: "10px" }}
                                     >
-                                        Comunicados
+                                        Mas
                                     </span>
-                                </NavLink>
+                                    {menuMas && (
+                                        <div
+                                            className="sub-menu"
+                                            style={{ top: "-50%" }}
+                                        >
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.SERVICIOS}`}
+                                            >
+                                                <FaTools />
+                                                <span className="item">
+                                                    Servicios
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.OFERTAS_ACADEMICAS}`}
+                                            >
+                                                <FaBook />
+                                                <span className="item">
+                                                    Ofertas Académicas
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.PUBLICACIONES}`}
+                                            >
+                                                <FaPaperPlane />
+                                                <span className="item">
+                                                    Publicaciones
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.GACETAS}`}
+                                            >
+                                                <FaNewspaper />
+                                                <span className="item">
+                                                    Gacetas
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.EVENTOS}`}
+                                            >
+                                                <FaCalendar />
+                                                <span className="item">
+                                                    Eventos
+                                                </span>
+                                            </NavLink>
+                                            <NavLink
+                                                className="nav-link"
+                                                to={`/Recurso/${TIPOS.VIDEOS}`}
+                                            >
+                                                <FaPlayCircle />
+                                                <span className="item">
+                                                    Videos
+                                                </span>
+                                            </NavLink>
+                                        </div>
+                                    )}
+                                </span>
                             </li>
                             <li>
-                                <NavLink
+                                <span
                                     className="nav-link"
-                                    to={`/Recurso/${TIPOS.AVISOS}`}
-                                    onClick={handleClick}
+                                    onClick={toogleSubMenuEnlaces}
+                                    style={{ cursor: "pointer" }}
                                 >
-                                    <FaBlog />
+                                    <FaDesktop />
                                     <span
                                         className="item"
                                         style={{ fontSize: "10px" }}
                                     >
-                                        Avisos
+                                        Virtual
                                     </span>
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className="nav-link"
-                                    to={`/Recurso/${TIPOS.CURSOS}`}
-                                    onClick={handleClick}
-                                >
-                                    <FaBlog />
-                                    <span
-                                        className="item"
-                                        style={{ fontSize: "10px" }}
-                                    >
-                                        Cursos
-                                    </span>
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className="nav-link"
-                                    to={`/Recurso/${TIPOS.SEMINARIOS}`}
-                                    onClick={handleClick}
-                                >
-                                    <FaBlog />
-                                    <span
-                                        className="item"
-                                        style={{ fontSize: "10px" }}
-                                    >
-                                        Seminarios
-                                    </span>
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className="nav-link"
-                                    to={`/Recurso/${TIPOS.OFERTAS_ACADEMICAS}`}
-                                    onClick={handleClick}
-                                >
-                                    <FaBlog />
-                                    <span
-                                        className="item"
-                                        style={{ fontSize: "10px" }}
-                                    >
-                                        Ofertas
-                                    </span>
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    className="nav-link"
-                                    to={`/Recurso`}
-                                    onClick={handleClick}
-                                >
-                                    <FaBlog />
-                                    <span className="item">Mas</span>
-                                </NavLink>
+                                    {menuEnlaces && (
+                                        <div
+                                            className="sub-menu"
+                                            style={{ top: "-150%" }}
+                                        >
+                                            {virtual.length > 0 ? (
+                                                virtual.map((item, index) => (
+                                                    <a
+                                                        className="nav-link"
+                                                        href={item.ei_link}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        key={index}
+                                                    >
+                                                        {item.ei_nombre
+                                                            .toLowerCase()
+                                                            .includes(
+                                                                "biblioteca"
+                                                            ) ? (
+                                                            <FaBookOpen />
+                                                        ) : (
+                                                            <FaLink />
+                                                        )}
+                                                        <span className="item">
+                                                            {item.ei_nombre}
+                                                        </span>
+                                                    </a>
+                                                ))
+                                            ) : (
+                                                <NavLink
+                                                    className="nav-link"
+                                                    to="#"
+                                                >
+                                                    <FaExternalLinkAlt />
+                                                    <span className="item">
+                                                        Sin Enlaces
+                                                    </span>
+                                                </NavLink>
+                                            )}
+                                        </div>
+                                    )}
+                                </span>
                             </li>
                             <li>
                                 <NavLink
                                     className="nav-link"
                                     to={`/Contacto`}
-                                    onClick={handleClick}
+                                    onClick={resetNav}
                                 >
-                                    <FiPhoneOutgoing />
+                                    <FaEnvelope />
                                     <span className="item">Contacto</span>
                                 </NavLink>
                             </li>
-                        </Scrollspy>
+                        </nav>
                     </div>
                 </header>
                 {/* End Header */}

@@ -28,7 +28,7 @@ const Contacto = () => {
             <Header institucion={institucion} />
             {/* End Header Section */}
 
-            <Slider title={`Contacto`} institucion={institucion} />
+            <Slider title={`CONTACTO`} institucion={institucion} />
             {/* End Slider Section */}
 
             <section id="contactus" className="section theme-light dark-bg">
@@ -51,7 +51,7 @@ const Contacto = () => {
 
             <footer className="footer white">
                 <div className="container">
-                    <Footer />
+                    <Footer institucion={institucion} />
                 </div>
             </footer>
             {/* End Contact Section */}

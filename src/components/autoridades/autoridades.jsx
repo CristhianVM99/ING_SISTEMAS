@@ -22,7 +22,13 @@ const Autoridades = ({ institucion = null }) => {
                                                     alt="about"
                                                 />
                                             </div>
-                                            <Social />
+                                            <Social
+                                                facebook={
+                                                    item.facebook_autoridad
+                                                }
+                                                twitter={item.twiter_autoridad}
+                                                celular={item.celular_autoridad}
+                                            />
                                             {/* End social icon */}
                                         </div>
                                         {/* End img */}

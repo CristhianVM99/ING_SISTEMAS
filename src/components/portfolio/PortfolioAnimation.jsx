@@ -4,373 +4,229 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import { FiLink } from "react-icons/fi";
 import Masonry from "react-masonry-css";
+import { TIPOS } from "../../types/types";
+import { NavLink } from "react-router-dom";
 
 const breakpointColumnsObj = {
-  default: 3,
-  1100: 3,
-  700: 2,
-  500: 1,
+    default: 3,
+    1100: 3,
+    700: 2,
+    500: 1,
 };
 
-const tabList = ["All", "Branding", "Photography", "Fashion", "Product"];
-const tabListContent = [
-  {
-    porftoliItems: [
-      {
-        img: "/img/portfolio/m-portfolio-1.jpg",
-        width: 400,
-        height: 550,
-        title: "Bottle Illustration",
-        subTitle: "Figma Shoot",
-        alterText: "Bottle Illustration",
-        delayAnimation: "",
-        portfolioLink:
-          "https://dribbble.com/shots/16529339-Beny-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-2.jpg",
-        width: 400,
-        height: 400,
-        title: "E-Learning App",
-        subTitle: "Nuna ios App",
-        alterText: "Illustration",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://dribbble.com/shots/16529350-Nairo-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-3.jpg",
-        width: 400,
-        height: 700,
-        title: "Visual Design",
-        subTitle: "Themeforest Marke",
-        alterText: "Business Mockup",
-        delayAnimation: "200",
-        portfolioLink:
-          "https://dribbble.com/shots/16529407-Deski-Saas-Software-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-4.jpg",
-        width: 400,
-        height: 400,
-        title: "Business Card",
-        subTitle: "Graphicriver Market",
-        alterText: "E-Cosmetics",
-        delayAnimation: "0",
-        portfolioLink:
-          "https://dribbble.com/shots/16545341-Imroz-Vue-JS-Creative-Agency-Portfolio-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-5.jpg",
-        width: 400,
-        height: 700,
-        title: "Chatting Application",
-        subTitle: "Codecanyon Market",
-        alterText: "Bottle Illustration",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://dribbble.com/shots/16529158-Waxon-Personal-Portfolio-VueJS-Template-RTL",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-6.jpg",
-        width: 400,
-        height: 500,
-        title: "Web Application",
-        subTitle: "Behance Shot",
-        alterText: "Web Application",
-        delayAnimation: "200",
-        portfolioLink:
-          "https://dribbble.com/shots/16529226-Krozo-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-7.jpg",
-        width: 400,
-        height: 700,
-        title: "Business Card",
-        subTitle: "Graphicriver Market",
-        alterText: "Business Card",
-        delayAnimation: "0",
-        portfolioLink:
-          "https://dribbble.com/shots/16529282-Shane-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-8.jpg",
-        width: 400,
-        height: 550,
-        title: "Chatting App Design",
-        subTitle: "Codecanyon Market",
-        alterText: "Chatting App Design",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://www.behance.net/gallery/128278341/Imroz-Vue-JS-Creative-Agency-Portfolio-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-9.jpg",
-        width: 400,
-        height: 400,
-        title: "Web Motion",
-        subTitle: "Behance Shot",
-        alterText: "Web Motion",
-        delayAnimation: "200",
-        portfolioLink: "https://www.facebook.com/ibthemes",
-      },
-    ],
-  },
-  {
-    porftoliItems: [
-      {
-        img: "/img/portfolio/m-portfolio-6.jpg",
-        width: 400,
-        height: 550,
-        title: "Web Application",
-        subTitle: "Behance Shot",
-        alterText: "Web Application",
-        delayAnimation: "",
-        portfolioLink:
-          "https://dribbble.com/shots/16529226-Krozo-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-3.jpg",
-        width: 400,
-        height: 700,
-        title: "Visual Design",
-        subTitle: "Themeforest Marke",
-        alterText: "Business Mockup",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://dribbble.com/shots/16529407-Deski-Saas-Software-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-8.jpg",
-        width: 400,
-        height: 550,
-        title: "Chatting App Design",
-        subTitle: "Codecanyon Market",
-        alterText: "Chatting App Design",
-        delayAnimation: "200",
-        portfolioLink:
-          "https://www.behance.net/gallery/128278341/Imroz-Vue-JS-Creative-Agency-Portfolio-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-4.jpg",
-        width: 400,
-        height: 400,
-        title: "Business Card",
-        subTitle: "Graphicriver Market",
-        alterText: "E-Cosmetics",
-        delayAnimation: "300",
-        portfolioLink:
-          "https://dribbble.com/shots/16545341-Imroz-Vue-JS-Creative-Agency-Portfolio-Template",
-      },
-    ],
-  },
-  {
-    porftoliItems: [
-      {
-        img: "/img/portfolio/m-portfolio-2.jpg",
-        width: 400,
-        height: 400,
-        title: "E-Learning App",
-        subTitle: "Nuna ios App",
-        alterText: "Illustration",
-        delayAnimation: "",
-        portfolioLink:
-          "https://dribbble.com/shots/16529350-Nairo-Personal-Portfolio-React-Template",
-      },
+const PortfolioAnimation = ({ institucion }) => {
+    if (institucion) {
+        const { institucion_nombre } = institucion;
+        const tabListContent = [
+            {
+                porftoliItems: [
+                    {
+                        img: "/images/convocatorias.jpg",
+                        width: 400,
+                        height: 550,
+                        title: "Convocatorias",
+                        subTitle: institucion_nombre,
+                        alterText: "convocatorias",
+                        delayAnimation: "",
+                        portfolioLink: `/Recurso/${TIPOS.CONVOCATORIAS}`,
+                    },
+                    {
+                        img: "/images/comunicados.jpg",
+                        width: 400,
+                        height: 400,
+                        title: "Comunicados",
+                        subTitle: institucion_nombre,
+                        alterText: "comunicados",
+                        delayAnimation: "100",
+                        portfolioLink: `/Recurso/${TIPOS.COMUNICADOS}`,
+                    },
+                    {
+                        img: "/images/avisos.png",
+                        width: 400,
+                        height: 700,
+                        title: "Avisos",
+                        subTitle: institucion_nombre,
+                        alterText: "avisos",
+                        delayAnimation: "200",
+                        portfolioLink: `/Recurso/${TIPOS.AVISOS}`,
+                    },
+                    {
+                        img: "/images/cursos.jpg",
+                        width: 400,
+                        height: 400,
+                        title: "Cursos",
+                        subTitle: institucion_nombre,
+                        alterText: "curso",
+                        delayAnimation: "0",
+                        portfolioLink: `/Recurso/${TIPOS.CURSOS}`,
+                    },
+                    {
+                        img: "/images/seminarios.jpg",
+                        width: 400,
+                        height: 700,
+                        title: "Seminarios",
+                        subTitle: institucion_nombre,
+                        alterText: "seminarios",
+                        delayAnimation: "100",
+                        portfolioLink: `/Recurso/${TIPOS.SEMINARIOS}`,
+                    },
+                    {
+                        img: "/images/servicios.jpg",
+                        width: 400,
+                        height: 500,
+                        title: "Servicios",
+                        subTitle: institucion_nombre,
+                        alterText: "servicios",
+                        delayAnimation: "200",
+                        portfolioLink: `/Recurso/${TIPOS.SERVICIOS}`,
+                    },
+                    {
+                        img: "/images/ofertasacademicas.jpg",
+                        width: 400,
+                        height: 700,
+                        title: "Ofertas Académicas",
+                        subTitle: institucion_nombre,
+                        alterText: "ofertas",
+                        delayAnimation: "0",
+                        portfolioLink: `/Recurso/${TIPOS.OFERTAS_ACADEMICAS}`,
+                    },
+                    {
+                        img: "/images/publicaciones.jpg",
+                        width: 400,
+                        height: 550,
+                        title: "Publicaciones",
+                        subTitle: institucion_nombre,
+                        alterText: "publicaciones",
+                        delayAnimation: "100",
+                        portfolioLink: `/Recurso/${TIPOS.PUBLICACIONES}`,
+                    },
+                    {
+                        img: "/images/gacetas.jpg",
+                        width: 400,
+                        height: 400,
+                        title: "Gacetas",
+                        subTitle: institucion_nombre,
+                        alterText: "gacetas",
+                        delayAnimation: "200",
+                        portfolioLink: `/Recurso/${TIPOS.GACETAS}`,
+                    },
+                    {
+                        img: "/images/eventos.jpg",
+                        width: 400,
+                        height: 400,
+                        title: "Eventos",
+                        subTitle: institucion_nombre,
+                        alterText: "eventos",
+                        delayAnimation: "",
+                        portfolioLink: `/Recurso/${TIPOS.EVENTOS}`,
+                    },
+                    {
+                        img: "/images/videos.jpg",
+                        width: 400,
+                        height: 400,
+                        title: "Videos",
+                        subTitle: institucion_nombre,
+                        alterText: "videos",
+                        delayAnimation: "100",
+                        portfolioLink: `/Recurso/${TIPOS.VIDEOS}`,
+                    },
+                ],
+            },
+        ];
 
-      {
-        img: "/img/portfolio/m-portfolio-5.jpg",
-        width: 400,
-        height: 700,
-        title: "Chatting Application",
-        subTitle: "Codecanyon Market",
-        alterText: "Bottle Illustration",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://dribbble.com/shots/16529158-Waxon-Personal-Portfolio-VueJS-Template-RTL",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-6.jpg",
-        width: 400,
-        height: 550,
-        title: "Web Application",
-        subTitle: "Behance Shot",
-        alterText: "Web Application",
-        delayAnimation: "200",
-        portfolioLink:
-          "https://dribbble.com/shots/16529226-Krozo-Personal-Portfolio-React-Template",
-      },
-    ],
-  },
-  {
-    porftoliItems: [
-      {
-        img: "/img/portfolio/m-portfolio-1.jpg",
-        width: 400,
-        height: 550,
-        title: "Bottle Illustration",
-        subTitle: "Figma Shoot",
-        alterText: "Bottle Illustration",
-        delayAnimation: "",
-        portfolioLink:
-          "https://dribbble.com/shots/16529339-Beny-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-7.jpg",
-        width: 400,
-        height: 700,
-        title: "Business Card",
-        subTitle: "Graphicriver Market",
-        alterText: "Business Card",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://dribbble.com/shots/16529282-Shane-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-9.jpg",
-        width: 400,
-        height: 400,
-        title: "Web Motion",
-        subTitle: "Behance Shot",
-        alterText: "Web Motion",
-        delayAnimation: "200",
-        portfolioLink: "https://www.facebook.com/ibthemes",
-      },
-    ],
-  },
-  {
-    porftoliItems: [
-      {
-        img: "/img/portfolio/m-portfolio-2.jpg",
-        width: 400,
-        height: 400,
-        title: "E-Learning App",
-        subTitle: "Nuna ios App",
-        alterText: "Illustration",
-        delayAnimation: "",
-        portfolioLink:
-          "https://dribbble.com/shots/16529350-Nairo-Personal-Portfolio-React-Template",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-3.jpg",
-        width: 400,
-        height: 700,
-        title: "Visual Design",
-        subTitle: "Themeforest Marke",
-        alterText: "Business Mockup",
-        delayAnimation: "100",
-        portfolioLink:
-          "https://dribbble.com/shots/16529407-Deski-Saas-Software-React-Template",
-      },
+        return (
+            <div className="portfolio-filter-01">
+                <Tabs>
+                    {/* End tablist */}
+                    <Gallery>
+                        {tabListContent.map((tabContent, i) => (
+                            <TabPanel key={i}>
+                                <div className="portfolio-content ">
+                                    <Masonry
+                                        breakpointCols={breakpointColumnsObj}
+                                        className="my-masonry-grid"
+                                        columnClassName="my-masonry-grid_column"
+                                    >
+                                        {tabContent.porftoliItems.map(
+                                            (val, i) => (
+                                                <div
+                                                    className="portfolio-box-01"
+                                                    key={i}
+                                                    data-aos="fade-right"
+                                                    data-aos-duration="1200"
+                                                    data-aos-delay={
+                                                        val.delayAnimation
+                                                    }
+                                                >
+                                                    <div className="portfolio-img">
+                                                        <div className="portfolio-info">
+                                                            <h5>
+                                                                <NavLink
+                                                                    to={
+                                                                        val.portfolioLink
+                                                                    }
+                                                                >
+                                                                    {val.title}
+                                                                </NavLink>
+                                                            </h5>
+                                                            <span>
+                                                                {val.subTitle}
+                                                            </span>
+                                                        </div>
+                                                        {/* End .portfolio-info */}
+                                                        <Item
+                                                            original={val.img}
+                                                            thumbnail={val.img}
+                                                            width={val.width}
+                                                            height={val.height}
+                                                        >
+                                                            {({
+                                                                ref,
+                                                                open,
+                                                            }) => (
+                                                                <div className="gallery-link">
+                                                                    <img
+                                                                        src={
+                                                                            val.img
+                                                                        }
+                                                                        alt="Childhood"
+                                                                        role="button"
+                                                                        ref={
+                                                                            ref
+                                                                        }
+                                                                        onClick={
+                                                                            open
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </Item>
 
-      {
-        img: "/img/portfolio/m-portfolio-5.jpg",
-        width: 400,
-        height: 700,
-        title: "Chatting Application",
-        subTitle: "Codecanyon Market",
-        alterText: "Bottle Illustration",
-        delayAnimation: "200",
-        portfolioLink:
-          "https://dribbble.com/shots/16529158-Waxon-Personal-Portfolio-VueJS-Template-RTL",
-      },
-      {
-        img: "/img/portfolio/m-portfolio-6.jpg",
-        width: 400,
-        height: 550,
-        title: "Web Application",
-        subTitle: "Behance Shot",
-        alterText: "Web Application",
-        delayAnimation: "300",
-        portfolioLink:
-          "https://dribbble.com/shots/16529226-Krozo-Personal-Portfolio-React-Template",
-      },
-    ],
-  },
-];
-
-const PortfolioAnimation = () => {
-  return (
-    <div className="portfolio-filter-01">
-      <Tabs>
-        <TabList className="filter d-flex flex-wrap justify-content-start">
-          {tabList.map((val, i) => (
-            <Tab key={i}>{val}</Tab>
-          ))}
-        </TabList>
-        {/* End tablist */}
-        <Gallery>
-          {tabListContent.map((tabContent, i) => (
-            <TabPanel key={i}>
-              <div className="portfolio-content ">
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                  columnClassName="my-masonry-grid_column"
-                >
-                  {tabContent.porftoliItems.map((val, i) => (
-                    <div
-                      className="portfolio-box-01"
-                      key={i}
-                      data-aos="fade-right"
-                      data-aos-duration="1200"
-                      data-aos-delay={val.delayAnimation}
-                    >
-                      <div className="portfolio-img">
-                        <div className="portfolio-info">
-                          <h5>
-                            <a
-                              href={val.portfolioLink}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {val.title}
-                            </a>
-                          </h5>
-                          <span>{val.subTitle}</span>
-                        </div>
-                        {/* End .portfolio-info */}
-                        <Item
-                          original={val.img}
-                          thumbnail={val.img}
-                          width={val.width}
-                          height={val.height}
-                        >
-                          {({ ref, open }) => (
-                            <div className="gallery-link">
-                              <img
-                                src={val.img}
-                                alt="Childhood"
-                                role="button"
-                                ref={ref}
-                                onClick={open}
-                              />
-                            </div>
-                          )}
-                        </Item>
-
-                        <a
-                          className="portfolio-icon"
-                          href={val.portfolioLink}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <FiLink />
-                        </a>
-                        {/* End .portfolio-icon */}
-                      </div>
-                    </div>
-                  ))}
-                </Masonry>
-              </div>
-              {/* End list wrapper */}
-            </TabPanel>
-          ))}
-        </Gallery>
-        {/* End tabpanel */}
-      </Tabs>
-    </div>
-  );
+                                                        <NavLink
+                                                            className="portfolio-icon"
+                                                            to={
+                                                                val.portfolioLink
+                                                            }
+                                                        >
+                                                            <FiLink />
+                                                        </NavLink>
+                                                        {/* End .portfolio-icon */}
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </Masonry>
+                                </div>
+                                {/* End list wrapper */}
+                            </TabPanel>
+                        ))}
+                    </Gallery>
+                    {/* End tabpanel */}
+                </Tabs>
+            </div>
+        );
+    }
+    return null;
 };
 
 export default PortfolioAnimation;

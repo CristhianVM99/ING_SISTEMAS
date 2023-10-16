@@ -1,156 +1,196 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Social from "../Social";
 import Testimonials from "../../components/testimonial/Testimonial";
 import Services from "../../components/service/Service";
 import Awards from "../../components/award/Awards";
+import { getGacetas, getStaticDataAcademia } from "../../api/institucionAPI";
+import { useQuery } from "@tanstack/react-query";
+import { TIPOS } from "../../types/types";
+import { NavLink } from "react-router-dom";
+import { Document, Page, pdfjs } from "react-pdf";
+import RandomImage from "../../utils/RandomImage";
 
-const About = () => {
-  return (
-    <>
-      <section id="about" className="section theme-light dark-bg">
-        <div className="container">
-          <div className="row align-items-center justify-content-center">
-            <div className="col-md-6 col-lg-4">
-              <div className="about-me">
-                <div className="img">
-                  <div className="img-in">
-                    <img src="img/about/about-me.jpg" alt="about" />
-                  </div>
-                  <Social />
-                  {/* End social icon */}
-                </div>
-                {/* End img */}
-                <div className="info">
-                  <p>Ux/Ui Designer</p>
-                  <h3>Nairobi Gadot</h3>
-                </div>
-                {/* End info */}
-              </div>
-              {/* End about-me */}
-            </div>
-            {/* End col */}
+const About = ({ categoria, institucion }) => {
+    /* OBTENCION DE INFORMACION DEL STORE API GACETAS*/
+    const { isLoading: loading_gacetas, data: gacetas } = useQuery({
+        queryKey: ["gacetas"],
+        queryFn: getGacetas,
+    });
+    /* OBTENCION DE INFORMACION DEL STORE STATICO */
+    const { isLoading: loading_static_data, data: staticData } = useQuery({
+        queryKey: ["staticDataAcademia"],
+        queryFn: getStaticDataAcademia,
+    });
+    useEffect(() => {
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+    });
+    if (
+        categoria != TIPOS.REGLAMENTO &&
+        !loading_static_data &&
+        !loading_gacetas &&
+        institucion
+    ) {
+        const {
+            txt_content_btn,
+            txt_content_calendario,
+            txt_content_horario,
+            txt_content_plan_de_estudio,
+        } = staticData;
+        const { institucion_nombre } = institucion;
+        var item = null;
+        var content = "";
 
-            <div className="col-lg-7 ml-auto">
-              <div className="about-info">
-                <div className="title">
-                  <h3>Biography</h3>
-                </div>
-                <div className="about-text">
-                  <p>
-                    I'm a Freelancer Front-end Developer with over 3 years of
-                    experience. I'm from San Francisco. I code and create web
-                    elements for amazing people around the world. I like work
-                    with new people. New people new Experiences.
-                  </p>
-                  <p>
-                    I'm a Freelancer Front-end Developer with over 3 years of
-                    experience. I'm from San Francisco. I code and create web
-                    elements for amazing people around the world. I like work
-                    with new people. New people new Experiences.
-                  </p>
-                </div>
-                <div className="info-list">
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <ul>
-                        <li>
-                          <label>Name: </label>
-                          <span>Nairobi Gadot</span>
-                        </li>
-                        <li>
-                          <label>Birthday: </label>
-                          <span>4th April 1994</span>
-                        </li>
-                        <li>
-                          <label>Age: </label>
-                          <span>26 years</span>
-                        </li>
-                        <li>
-                          <label>Address: </label>
-                          <span>San Francisco</span>
-                        </li>
-                      </ul>
+        if (categoria === TIPOS.CALENDARIO) {
+            /* OBTENEMOS EL CALENDARIO DE LA INSTITUCION */
+            item = gacetas.find((e) =>
+                e.gaceta_titulo.includes(TIPOS.CALENDARIO)
+            );
+            content = txt_content_calendario;
+        }
+        if (categoria === TIPOS.HORARIO) {
+            /* OBTENEMOS EL CALENDARIO DE LA INSTITUCION */
+            item = gacetas.find((e) => e.gaceta_titulo.includes(TIPOS.HORARIO));
+            content = txt_content_horario;
+        }
+        if (categoria === TIPOS.PLANESTUDIO) {
+            /* OBTENEMOS EL CALENDARIO DE LA INSTITUCION */
+            item = gacetas.find((e) => e.gaceta_titulo.includes(TIPOS.PLAN));
+            content = txt_content_plan_de_estudio;
+        }
+        return (
+            <>
+                <section id="about" className="section theme-light dark-bg">
+                    <div className="container">
+                        <div className="row align-items-center justify-content-center">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="">
+                                    <div className="img">
+                                        <div className="img-in">
+                                            <Document
+                                                file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                            >
+                                                <Page
+                                                    pageNumber={1}
+                                                    width="330"
+                                                />
+                                            </Document>
+                                        </div>
+
+                                        {/* End social icon */}
+                                    </div>
+                                    {/* End img */}
+                                    <div
+                                        className="info"
+                                        style={{
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        <h3 style={{ paddingTop: "20px" }}>
+                                            {item.gaceta_titulo}
+                                        </h3>
+                                    </div>
+                                    {/* End info */}
+                                </div>
+                                {/* End about-me */}
+                            </div>
+                            {/* End col */}
+
+                            <div className="col-lg-7 ml-auto">
+                                <div className="about-info">
+                                    <div className="title">
+                                        <h3>{categoria}</h3>
+                                    </div>
+                                    <div className="about-text">
+                                        <p>{content}</p>
+                                    </div>
+
+                                    <a
+                                        className="px-btn px-btn-white"
+                                        href={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {txt_content_btn}
+                                    </a>
+                                </div>
+                            </div>
+                            {/* End col */}
+                        </div>
                     </div>
-                    <div className="col-sm-6">
-                      <ul>
-                        <li>
-                          <label>Phone: </label>
-                          <span>(+38) 469 2344 2364</span>
-                        </li>
-                        <li>
-                          <label>Email: </label>
-                          <span>info@domainname.com</span>
-                        </li>
-                        <li>
-                          <label>Skype: </label>
-                          <span>nairob.40</span>
-                        </li>
-                        <li>
-                          <label>Freelance: </label>
-                          <span>Available</span>
-                        </li>
-                      </ul>
+                </section>
+            </>
+        );
+    }
+    if (categoria == TIPOS.REGLAMENTO && !loading_static_data && institucion) {
+        /* DATOS DE LA INSTITUCION */
+        const {
+            institucion_sobre_ins,
+            institucion_nombre,
+            portada,
+            institucion_logo,
+        } = institucion;
+
+        /* DATOS ESTATICOS */
+        const { txt_content_reglamento } = staticData;
+
+        const img = RandomImage(portada);
+
+        return (
+            <>
+                <section id="about" className="section theme-light dark-bg">
+                    <div className="container">
+                        <div className="row align-items-center justify-content-center">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="">
+                                    <div className="img">
+                                        <div className="img-in">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                alt="about"
+                                            />
+                                        </div>
+
+                                        {/* End social icon */}
+                                    </div>
+                                    {/* End img */}
+                                    <div
+                                        className="info"
+                                        style={{
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        <h3 style={{ paddingTop: "20px" }}>
+                                            {institucion_nombre}
+                                        </h3>
+                                    </div>
+                                    {/* End info */}
+                                </div>
+                                {/* End about-me */}
+                            </div>
+                            {/* End col */}
+
+                            <div className="col-lg-7 ml-auto">
+                                <div className="about-info">
+                                    <div className="title">
+                                        <h3>{txt_content_reglamento}</h3>
+                                    </div>
+                                    <div
+                                        className="about-text"
+                                        style={{ color: "#fff" }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: institucion_sobre_ins,
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                            {/* End col */}
+                        </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* End col */}
-          </div>
-
-          {/* separated */}
-          <div
-            className="separated"
-            style={{
-              backgroundImage: `url(${
-                process.env.PUBLIC_URL + "img/border-dark.png"
-              })`,
-            }}
-          ></div>
-          {/* End separated */}
-          <div className="title">
-            <h3>What I do?</h3>
-          </div>
-          <Services />
-          {/* End .row */}
-
-          {/* separated */}
-          <div
-            className="separated"
-            style={{
-              backgroundImage: `url(${
-                process.env.PUBLIC_URL + "img/border-dark.png"
-              })`,
-            }}
-          ></div>
-          {/* End separated */}
-
-          <div className="title">
-            <h3>Awards.</h3>
-          </div>
-          <Awards />
-          {/* End Awards */}
-
-          {/* separated */}
-          <div
-            className="separated"
-            style={{
-              backgroundImage: `url(${
-                process.env.PUBLIC_URL + "img/border-dark.png"
-              })`,
-            }}
-          ></div>
-          {/* End separated */}
-
-          <div className="title">
-            <h3>Testimonials.</h3>
-          </div>
-          <Testimonials />
-          {/* End Testimonaial */}
-        </div>
-      </section>
-    </>
-  );
+                </section>
+            </>
+        );
+    }
+    return null;
 };
 
 export default About;

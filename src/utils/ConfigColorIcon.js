@@ -19,7 +19,6 @@ export default function ConfigColorIcon(institucion, title) {
         document.createElement("link");
     link.type = "image/x-icon";
     link.rel = "icon";
-    console.log("link", link);
     link.href = `${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion.institucion_logo}`;
     document.getElementsByTagName("head")[0].appendChild(link);
     document.title = `${title} | ${institucion.institucion_nombre}`;

@@ -59,3 +59,13 @@ body {
         padding-bottom: 0;
     }
 }
+
+ul li:hover .nav_link {
+    color: #fff;
+}
+
+/* REACT - PDF */
+.react-pdf__Page__textContent.textLayer,
+.react-pdf__Page__annotations.annotationLayer {
+    display: none !important;
+}

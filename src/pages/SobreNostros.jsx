@@ -37,7 +37,7 @@ const SobreNosotros = () => {
 
             <footer className="footer white">
                 <div className="container">
-                    <Footer />
+                    <Footer institucion={institucion} />
                 </div>
             </footer>
             {/* End Contact Section */}

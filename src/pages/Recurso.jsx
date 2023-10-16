@@ -32,13 +32,25 @@ const Recurso = () => {
             <Header institucion={institucion} />
             {/* End Header Section */}
 
-            <Slider title={categoria.toUpperCase()} institucion={institucion} />
+            <Slider
+                title={
+                    categoria.toUpperCase() === TIPOS.OFERTAS_ACADEMICAS
+                        ? "OFERTAS ACADÉMICAS"
+                        : categoria.toUpperCase()
+                }
+                institucion={institucion}
+            />
             {/* End Slider Section */}
 
             <section id="blog" className="section">
                 <div className="container">
                     <div className="title">
-                        <h3>Lo Ultimo de {categoria}</h3>
+                        <h3>
+                            Lo Ultimo de{" "}
+                            {categoria === TIPOS.OFERTAS_ACADEMICAS
+                                ? "OFERTAS ACADÉMICAS"
+                                : categoria}
+                        </h3>
                     </div>
                     <Blog categoria={categoria} institucion={institucion} />
                 </div>
@@ -47,7 +59,7 @@ const Recurso = () => {
 
             <footer className="footer white">
                 <div className="container">
-                    <Footer />
+                    <Footer institucion={institucion} />
                 </div>
             </footer>
             {/* End Contact Section */}
