@@ -27,13 +27,18 @@ const Principal = () => {
         queryKey: ["institucion"],
         queryFn: getInstitucion,
     });
+    const [mostrarMiComponente, setMostrarMiComponente] = useState(true);
 
     //configuracion del icono y logo de la pagina
     useEffect(() => {
         institucion && ConfigColorIcon(institucion, "PRINCIPAL");
-    }, [institucion]);
+        const timer = setTimeout(() => {
+            setMostrarMiComponente(false);
+        }, 1000); // 3000 milisegundos (3 segundos)
 
-    if (loading_institucion) <Loader />;
+        // Limpieza del temporizador al desmontar el componente
+        return () => clearTimeout(timer);
+    }, [institucion]);
     //retorno del componente principal
     if (!loading_institucion) {
         const img = RandomImage(institucion.portada);
@@ -43,6 +48,7 @@ const Principal = () => {
                     <Header institucion={institucion} />
                     {/* End Header Section */}
                     <Slider institucion={institucion} />
+                    {mostrarMiComponente && <Loader />}
                     {/* End Slider Section */}
                     <section className="section">
                         <RedesAnimation t="auto" r="auto" b="-50px" l="-50px" />
