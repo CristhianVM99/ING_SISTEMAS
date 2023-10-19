@@ -6,13 +6,13 @@ export default function Service({
     if (mision && vision && objetivos) {
         const EnlacesContent = [
             {
-                icon: "icon-mobile",
+                icon: "icon-flag",
                 title: "Misión",
                 descriptions: mision,
                 delayAnimation: "",
             },
             {
-                icon: "icon-desktop",
+                icon: "icon-telescope",
                 title: "Visión",
                 descriptions: vision,
                 delayAnimation: "200",

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import Contact from "../contact/Contact";
 import { TIPOS } from "../../types/types";
 import { getConvocatorias, getCursos } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import BlogNav from "./BlogNav";
+import SinRegistros from "../SinRegistros";
 
 Modal.setAppElement("#root");
 
@@ -89,7 +89,7 @@ const Blog = ({ categoria, institucion = null }) => {
     }
 
     if (
-        institucion != null &&
+        institucion &&
         categoria === TIPOS.ALL_CONVOCATORIAS &&
         !loading_convocatorias
     ) {
@@ -111,7 +111,17 @@ const Blog = ({ categoria, institucion = null }) => {
         return (
             <>
                 <div className="row">
-                    <div className="col-md-4 m-15px-tb">
+                    <div
+                        className="col-md-4 m-15px-tb"
+                        style={{
+                            border: "3px solid transparent",
+                            borderRight: "1px solid transparent",
+                            borderImage:
+                                "linear-gradient(to top,var(--color-primario),transparent)",
+                            borderImageSlice: 1,
+                            paddingTop: "40px",
+                        }}
+                    >
                         <div className="blog-grid" onClick={toggleModalOne}>
                             <div className="blog-img">
                                 <a>
@@ -120,6 +130,7 @@ const Blog = ({ categoria, institucion = null }) => {
                                         alt="blog post"
                                         style={{
                                             height: "477px",
+                                            width: "100%",
                                             objectFit: "cover",
                                         }}
                                     ></img>
@@ -145,7 +156,18 @@ const Blog = ({ categoria, institucion = null }) => {
                     </div>
                     {/* End .col for blog-1 */}
 
-                    <div className="col-md-4 m-15px-tb">
+                    <div
+                        className="col-md-4 m-15px-tb"
+                        style={{
+                            border: "3px solid transparent",
+                            borderRight: "1px solid transparent",
+                            borderLeft: "1px solid transparent",
+                            borderImage:
+                                "linear-gradient(to top,var(--color-primario),transparent)",
+                            borderImageSlice: 1,
+                            paddingTop: "40px",
+                        }}
+                    >
                         <div className="blog-grid" onClick={toggleModalTwo}>
                             <div className="blog-img">
                                 <a>
@@ -154,6 +176,7 @@ const Blog = ({ categoria, institucion = null }) => {
                                         alt="blog post"
                                         style={{
                                             height: "477px",
+                                            width: "100%",
                                             objectFit: "cover",
                                         }}
                                     ></img>
@@ -179,7 +202,17 @@ const Blog = ({ categoria, institucion = null }) => {
                     </div>
                     {/* End .col for blog-2 */}
 
-                    <div className="col-md-4 m-15px-tb">
+                    <div
+                        className="col-md-4 m-15px-tb"
+                        style={{
+                            border: "3px solid transparent",
+                            borderLeft: "1px solid transparent",
+                            borderImage:
+                                "linear-gradient(to top,var(--color-primario),transparent)",
+                            borderImageSlice: 1,
+                            paddingTop: "40px",
+                        }}
+                    >
                         <div className="blog-grid" onClick={toggleModalThree}>
                             <div className="blog-img">
                                 <a>
@@ -188,6 +221,7 @@ const Blog = ({ categoria, institucion = null }) => {
                                         alt="blog post"
                                         style={{
                                             height: "477px",
+                                            width: "100%",
                                             objectFit: "cover",
                                         }}
                                     ></img>
@@ -494,11 +528,7 @@ const Blog = ({ categoria, institucion = null }) => {
             </>
         );
     }
-    if (
-        institucion != null &&
-        categoria === TIPOS.ALL_CURSOS &&
-        !loading_cursos
-    ) {
+    if (institucion && categoria === TIPOS.ALL_CURSOS && !loading_cursos) {
         const { institucion_nombre, institucion_logo } = institucion;
 
         const lastCurso = getLastCursosItemByTipo(cursos, TIPOS.CURSOS);
@@ -506,7 +536,18 @@ const Blog = ({ categoria, institucion = null }) => {
         return (
             <>
                 <div className="row">
-                    <div className="col-md-4 m-15px-tb">
+                    <div className="col-md-2"></div>
+                    <div
+                        className="col-md-4 m-15px-tb"
+                        style={{
+                            border: "3px solid transparent",
+                            borderRight: "1px solid transparent",
+                            borderImage:
+                                "linear-gradient(to top,var(--color-primario),transparent)",
+                            borderImageSlice: 1,
+                            paddingTop: "40px",
+                        }}
+                    >
                         <div className="blog-grid" onClick={toggleModalOne}>
                             <div className="blog-img">
                                 <a>
@@ -515,6 +556,7 @@ const Blog = ({ categoria, institucion = null }) => {
                                         alt="blog post"
                                         style={{
                                             height: "477px",
+                                            width: "100%",
                                             objectFit: "cover",
                                         }}
                                     ></img>
@@ -537,7 +579,17 @@ const Blog = ({ categoria, institucion = null }) => {
                     </div>
                     {/* End .col for blog-1 */}
 
-                    <div className="col-md-4 m-15px-tb">
+                    <div
+                        className="col-md-4 m-15px-tb"
+                        style={{
+                            border: "3px solid transparent",
+                            borderLeft: "1px solid transparent",
+                            borderImage:
+                                "linear-gradient(to top,var(--color-primario),transparent)",
+                            borderImageSlice: 1,
+                            paddingTop: "40px",
+                        }}
+                    >
                         <div className="blog-grid" onClick={toggleModalTwo}>
                             <div className="blog-img">
                                 <a>
@@ -546,6 +598,7 @@ const Blog = ({ categoria, institucion = null }) => {
                                         alt="blog post"
                                         style={{
                                             height: "477px",
+                                            width: "100%",
                                             objectFit: "cover",
                                         }}
                                     ></img>

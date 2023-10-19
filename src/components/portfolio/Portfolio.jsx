@@ -8,6 +8,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { getGacetas } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { TIPOS } from "../../types/types";
+import { NavLink } from "react-router-dom";
+import SinRegistros from "../SinRegistros";
 
 const Portfolio = ({ categoria, institucion = null }) => {
     /* OBTENCION DE INFORMACION DEL STORE API GACETAS*/
@@ -73,7 +75,7 @@ const Portfolio = ({ categoria, institucion = null }) => {
                     height: 550,
                     title: gaceta.gaceta_titulo,
                     subTitle: institucion_nombre,
-                    alterText: "gaceta",
+                    alterText: "GACETAS",
                     portfolioLink: `${process.env.REACT_APP_ROOT_API}/Gaceta/${gaceta.gaceta_documento}`,
                 })),
             },
@@ -160,7 +162,17 @@ const Portfolio = ({ categoria, institucion = null }) => {
                                                                     {val.title}
                                                                 </a>
                                                             </h5>
-                                                            <span>
+                                                            <span
+                                                                style={{
+                                                                    color: "#fff",
+                                                                    background:
+                                                                        "var(--color-terciario)",
+                                                                    padding:
+                                                                        "5px 10px",
+                                                                    borderRadius:
+                                                                        "20px",
+                                                                }}
+                                                            >
                                                                 {val.subTitle}
                                                             </span>
                                                         </div>
@@ -175,22 +187,30 @@ const Portfolio = ({ categoria, institucion = null }) => {
                                                                 ref,
                                                                 open,
                                                             }) => (
-                                                                <div className="gallery-link">
-                                                                    <Document
-                                                                        file={
-                                                                            val.img
-                                                                        }
-                                                                    >
-                                                                        <Page
-                                                                            pageNumber={
-                                                                                1
+                                                                <a
+                                                                    href={
+                                                                        val.img
+                                                                    }
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    <div className="gallery-link">
+                                                                        <Document
+                                                                            file={
+                                                                                val.img
                                                                             }
-                                                                            height={
-                                                                                500
-                                                                            }
-                                                                        />
-                                                                    </Document>
-                                                                </div>
+                                                                        >
+                                                                            <Page
+                                                                                pageNumber={
+                                                                                    1
+                                                                                }
+                                                                                height={
+                                                                                    500
+                                                                                }
+                                                                            />
+                                                                        </Document>
+                                                                    </div>
+                                                                </a>
                                                             )}
                                                         </Item>
 
@@ -208,6 +228,10 @@ const Portfolio = ({ categoria, institucion = null }) => {
                                                     </div>
                                                 </div>
                                             )
+                                        )}
+                                        {tabContent.porftoliItems.length ===
+                                            0 && (
+                                            <SinRegistros title={"GACETAS"} />
                                         )}
                                     </Masonry>
                                 </div>

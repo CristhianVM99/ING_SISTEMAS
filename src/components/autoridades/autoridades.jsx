@@ -1,19 +1,27 @@
 import React from "react";
 import Social from "../Social";
-import Testimonials from "../testimonial/Testimonial";
-import Services from "../service/Service";
-import Awards from "../award/AwardsAnimation";
+import SinRegistros from "../SinRegistros";
 
 const Autoridades = ({ institucion = null }) => {
     if (institucion != null) {
-        const { autoridad, institucion_nombre } = institucion;
+        const { autoridad } = institucion;
         return (
             <>
                 <section id="about" className="section">
                     <div className="container">
                         <div className="row align-items-center justify-content-center">
                             {autoridad.map((item, index) => (
-                                <div className="col-md-6 col-lg-4" key={index}>
+                                <div
+                                    className="col-md-6 col-lg-4"
+                                    key={index}
+                                    style={{
+                                        border: "3px solid transparent",
+                                        borderImage:
+                                            "linear-gradient(45deg,var(--color-primario),transparent)",
+                                        borderImageSlice: 1,
+                                        paddingTop: "40px",
+                                    }}
+                                >
                                     <div className="about-me">
                                         <div className="img">
                                             <div className="img-in">
@@ -41,6 +49,9 @@ const Autoridades = ({ institucion = null }) => {
                                     {/* End about-me */}
                                 </div>
                             ))}
+                            {autoridad.length === 0 && (
+                                <SinRegistros title={"autoridades"} />
+                            )}
                             {/* End col */}
                         </div>
                     </div>

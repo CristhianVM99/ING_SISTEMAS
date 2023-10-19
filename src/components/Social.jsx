@@ -1,12 +1,5 @@
 import React from "react";
-import {
-    FaFacebookF,
-    FaTwitter,
-    FaInstagram,
-    FaLinkedinIn,
-    FaPinterestP,
-    FaPhoneAlt,
-} from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaPhoneAlt } from "react-icons/fa";
 
 const Social = ({ facebook = null, twitter = null, celular = null }) => {
     if (facebook && twitter && celular) {

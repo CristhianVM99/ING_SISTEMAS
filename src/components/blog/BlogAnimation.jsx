@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import Contact from "../contact/Contact";
 import { TIPOS } from "../../types/types";
 import ReactPlayer from "react-player/youtube";
 import {
@@ -15,9 +14,9 @@ import {
 } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { FaSearch } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
 import BlogNav from "./BlogNav";
 import { Document, Page, pdfjs } from "react-pdf";
+import SinRegistros from "../SinRegistros";
 
 Modal.setAppElement("#root");
 
@@ -146,6 +145,7 @@ const Blog = ({ categoria, institucion = null }) => {
                 )
                 .slice(currentPage, currentPage + 6);
         };
+        console.log("filter", filter_convocatorias().length);
 
         const nextPage = () => {
             if (
@@ -235,7 +235,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -2635,6 +2637,209 @@ const Blog = ({ categoria, institucion = null }) => {
                                                                 __html: selectedConvocatoria.video_breve_descripcion,
                                                             }}
                                                         ></div>
+                                                        {/* End article content */}
+                                                        <BlogNav
+                                                            setIsOpen={
+                                                                setIsOpen
+                                                            }
+                                                        />
+                                                        {/* End tag */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* End .article-title */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
+            </>
+        );
+    }
+    if (institucion && categoria === TIPOS.INSTITUTO && !loading_gacetas) {
+        const { institucion_nombre, institucion_logo } = institucion;
+
+        var filter_gacetas = gacetas.filter((e) =>
+            e.gaceta_titulo.toLowerCase().includes("instituto")
+        );
+        const filter_convocatorias = () => {
+            if (search.length === 0) {
+                return filter_gacetas.slice(currentPage, currentPage + 6);
+            }
+            return filter_gacetas
+                .filter((e) =>
+                    e.gaceta_titulo.toLowerCase().includes(search.toLowerCase())
+                )
+                .slice(currentPage, currentPage + 6);
+        };
+
+        const nextPage = () => {
+            if (
+                filter_gacetas.filter((e) =>
+                    e.gaceta_titulo.toLowerCase().includes(search.toLowerCase())
+                ).length >
+                currentPage + 5
+            )
+                setCurrentPage(currentPage + 6);
+        };
+
+        return (
+            <>
+                <div className="d-flex justify-content-between content-search-btn">
+                    <div className="d-flex align-items-center mb-2 content-search">
+                        <label
+                            htmlFor="search"
+                            className="text-white"
+                            style={{
+                                fontSize: "2em",
+                                marginRight: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <FaSearch />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            name="search"
+                            className="mb-3 form-control flex-1"
+                            value={search}
+                            onChange={onSearchChange}
+                            style={{ marginRight: "1em" }}
+                        />
+                    </div>
+                    <div className="content-btn">
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            onClick={prevPage}
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            className="px-btn px-btn-white content-btn-btn"
+                            style={{ marginLeft: "10px" }}
+                            onClick={nextPage}
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    {filter_convocatorias().map((item, index) => (
+                        <div className="col-md-4 m-15px-tb" key={index}>
+                            <div
+                                className="blog-grid"
+                                onClick={() => toggleModal(item)}
+                            >
+                                <div
+                                    className="blog-img"
+                                    style={{ height: "480px" }}
+                                >
+                                    <Document
+                                        file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                    >
+                                        <Page pageNumber={1} width="360" />
+                                    </Document>
+                                </div>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(item.gaceta_fecha)} -{" "}
+                                        {TIPOS.GACETAS}
+                                    </div>
+                                    <h6>
+                                        <a>{item.gaceta_titulo}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End .col for blog-1 */}
+                </div>
+                {/* End .row */}
+
+                {selectedConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
+
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <Document
+                                                file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${selectedConvocatoria.gaceta_documento}`}
+                                            >
+                                                <Page
+                                                    pageNumber={1}
+                                                    width="940"
+                                                />
+                                            </Document>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        selectedConvocatoria.gaceta_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
+                                                        <span>
+                                                            {formatearFecha(
+                                                                selectedConvocatoria.gaceta_fecha
+                                                            )}
+                                                        </span>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS DE LA GACETA
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de Publicacion
+                                                            de la gaceta :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    selectedConvocatoria.gaceta_fecha
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <a
+                                                            href={`${process.env.REACT_APP_ROOT_API}/Gaceta/${selectedConvocatoria.gaceta_documento}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            <button className="px-btn px-btn-white content-btn-btn">
+                                                                Descargar PDF
+                                                            </button>
+                                                        </a>
                                                         {/* End article content */}
                                                         <BlogNav
                                                             setIsOpen={

@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/header/HeaderTwo";
 import Slider from "../components/slider/SliderThree";
-import About from "../components/about/AboutTwo";
-import Resume from "../components/resume/Resume";
-import Portfolio from "../components/portfolio/Portfolio";
 import Blog from "../components/blog/Blog";
-import Contact from "../components/contact/Contact";
-import ContactInfo from "../components/contact/ContactInfo";
-import Map from "../components/contact/Map";
 import Footer from "../components/footer/Footer";
-import useDocumentTitle from "../components/useDocumentTitle";
 import { useQuery } from "@tanstack/react-query";
 import { getInstitucion } from "../api/institucionAPI";
 import ConfigColorIcon from "../utils/ConfigColorIcon";
@@ -20,6 +13,7 @@ import Awards from "../components/award/AwardsAnimation";
 import RedesAnimation from "../components/RedesAnimation";
 import ImageIntermedio from "../components/ImageIntermedio";
 import Loader from "../components/Loader";
+import SinRegistros from "../components/SinRegistros";
 
 const Principal = () => {
     // obtención de la información sobre la carrera
@@ -29,9 +23,11 @@ const Principal = () => {
     });
     const [mostrarMiComponente, setMostrarMiComponente] = useState(true);
 
-    //configuracion del icono y logo de la pagina
     useEffect(() => {
+        //configuracion del icono y logo de la pagina
         institucion && ConfigColorIcon(institucion, "PRINCIPAL");
+
+        //temporizador del loader
         const timer = setTimeout(() => {
             setMostrarMiComponente(false);
         }, 1000); // 3000 milisegundos (3 segundos)
@@ -39,17 +35,23 @@ const Principal = () => {
         // Limpieza del temporizador al desmontar el componente
         return () => clearTimeout(timer);
     }, [institucion]);
+
     //retorno del componente principal
     if (!loading_institucion) {
+        // imagen generada randomicamente
         const img = RandomImage(institucion.portada);
         return (
             <>
                 <div className="main-left theme-dark">
+                    {/* HEADER ---------------------------- */}
                     <Header institucion={institucion} />
-                    {/* End Header Section */}
+                    {/* SLIDER PRINCIPAL ------------------ */}
                     <Slider institucion={institucion} />
+
+                    {/* LOADER ---------------------------- */}
                     {mostrarMiComponente && <Loader />}
-                    {/* End Slider Section */}
+
+                    {/* AUTORIDADES ----------------------- */}
                     <section className="section">
                         <RedesAnimation t="auto" r="auto" b="-50px" l="-50px" />
                         <RedesAnimation t="0px" r="0px" b="auto" l="auto" />
@@ -58,11 +60,13 @@ const Principal = () => {
                                 <h3>Autoridades</h3>
                             </div>
                             <Autoridades institucion={institucion} />
-                            {/* End About Section */}
                         </div>
                     </section>
-                    {/* End Portfolio Section */}
+
+                    {/* IMAGEN INTERMEDIA ----------------- */}
                     <ImageIntermedio img={img} />
+
+                    {/* CONVOCATORIAS - COMUNICADOS - AVISOS ----------- */}
                     <section className="section">
                         <RedesAnimation t="0px" r="auto" b="auto" l="0px" />
                         <RedesAnimation t="auto" r="0px" b="0px" l="auto" />
@@ -76,7 +80,8 @@ const Principal = () => {
                             />
                         </div>
                     </section>
-                    {/* End Portfolio Section */}
+
+                    {/* CURSOS - SEMINARIOS ----------------------------- */}
                     <section className="section">
                         <RedesAnimation t="auto" r="auto" b="-50px" l="-50px" />
                         <RedesAnimation t="0px" r="0px" b="auto" l="auto" />
@@ -90,7 +95,8 @@ const Principal = () => {
                             />
                         </div>
                     </section>
-                    {/* End Portfolio Section */}
+
+                    {/* ENLACES VIRTUALES ------------------------------- */}
                     <section className="section">
                         <RedesAnimation t="0px" r="auto" b="auto" l="0px" />
                         <RedesAnimation t="auto" r="-25px" b="-15px" l="auto" />
@@ -101,13 +107,16 @@ const Principal = () => {
                             <Awards institucion={institucion} />
                         </div>
                     </section>
+
+                    {/* IMAGEN INTERMEDIO ------------------ */}
                     <ImageIntermedio img={img} />
+
+                    {/* FOOTER ----------------------------- */}
                     <footer className="footer white">
                         <div className="container">
                             <Footer institucion={institucion} />
                         </div>
                     </footer>
-                    {/* End Contact Section */}
                 </div>
             </>
         );

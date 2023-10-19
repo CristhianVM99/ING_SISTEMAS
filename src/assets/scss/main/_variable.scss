@@ -7,12 +7,17 @@
     //--color-primario: #ff9301;
     --color-secundario: #000;
     --color-terciario: #000;
+    --gradiente-color: linear-gradiente(
+        top left,
+        var(--color-primario),
+        var(--color-secundario)
+    );
 }
 
 $px-theme: #063edc !default;
 $px-dark: #0b0b13 !default;
 $px-white: #fff !default;
-$px-black: #000 !default;
+$px-black: #161616 !default;
 
 $px-bg-1: #10101a !default;
 $px-bg-2: #0e0e17 !default;

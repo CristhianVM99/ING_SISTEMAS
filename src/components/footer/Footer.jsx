@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
 
-const Footer = ({ institucion }) => {
+const Footer = ({ institucion = null }) => {
     /* DATOS DE LA INSTITUCION */
     const {
         institucion_nombre,

@@ -3,7 +3,11 @@ html {
 }
 
 body {
-    background: $px-black;
+    background: linear-gradient(
+        to left,
+        var(--color-secundario),
+        var(--color-terciario) 100%
+    );
     color: $px-dark;
     font-family: $px-font;
     line-height: $px-line-height;

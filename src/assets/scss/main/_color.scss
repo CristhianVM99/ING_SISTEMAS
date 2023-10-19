@@ -1,8 +1,12 @@
 /* Bg color
 ----------------------------*/
 .dark-bg {
-  background: $px-bg-2;
-  .theme-light & {
-    background: $px-gray;
-  }
+    background: linear-gradient(
+        45deg,
+        var(--color-terciario) 30%,
+        var(--color-primario)
+    );
+    .theme-light & {
+        background: $px-gray;
+    }
 }

@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
-import Social from "../Social";
-import Testimonials from "../../components/testimonial/Testimonial";
-import Services from "../../components/service/Service";
-import Awards from "../../components/award/Awards";
 import { getGacetas, getStaticDataAcademia } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { TIPOS } from "../../types/types";
-import { NavLink } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import RandomImage from "../../utils/RandomImage";
+import { FaRegFilePdf } from "react-icons/fa";
+import SinRegistros from "../SinRegistros";
 
 const About = ({ categoria, institucion }) => {
     /* OBTENCION DE INFORMACION DEL STORE API GACETAS*/
@@ -25,7 +22,7 @@ const About = ({ categoria, institucion }) => {
         pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
     });
     if (
-        categoria != TIPOS.REGLAMENTO &&
+        categoria !== TIPOS.REGLAMENTO &&
         !loading_static_data &&
         !loading_gacetas &&
         institucion
@@ -36,26 +33,28 @@ const About = ({ categoria, institucion }) => {
             txt_content_horario,
             txt_content_plan_de_estudio,
         } = staticData;
-        const { institucion_nombre } = institucion;
+
         var item = null;
         var content = "";
+        var title = "";
 
         if (categoria === TIPOS.CALENDARIO) {
             /* OBTENEMOS EL CALENDARIO DE LA INSTITUCION */
-            item = gacetas.find((e) =>
-                e.gaceta_titulo.includes(TIPOS.CALENDARIO)
-            );
+            item = gacetas.find((e) => e.gaceta_titulo.includes(TIPOS.HORARIO));
             content = txt_content_calendario;
+            title = "CALENDARIO ACADÉMICO";
         }
         if (categoria === TIPOS.HORARIO) {
             /* OBTENEMOS EL CALENDARIO DE LA INSTITUCION */
             item = gacetas.find((e) => e.gaceta_titulo.includes(TIPOS.HORARIO));
             content = txt_content_horario;
+            title = "HORARIO ACADÉMICO";
         }
         if (categoria === TIPOS.PLANESTUDIO) {
             /* OBTENEMOS EL CALENDARIO DE LA INSTITUCION */
             item = gacetas.find((e) => e.gaceta_titulo.includes(TIPOS.PLAN));
             content = txt_content_plan_de_estudio;
+            title = "PLAN DE ESTUDIO";
         }
         return (
             <>
@@ -66,14 +65,27 @@ const About = ({ categoria, institucion }) => {
                                 <div className="">
                                     <div className="img">
                                         <div className="img-in">
-                                            <Document
-                                                file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
-                                            >
-                                                <Page
-                                                    pageNumber={1}
-                                                    width="330"
+                                            {item && (
+                                                <a
+                                                    href={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Document
+                                                        file={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                                    >
+                                                        <Page
+                                                            pageNumber={1}
+                                                            width="330"
+                                                        />
+                                                    </Document>
+                                                </a>
+                                            )}
+                                            {!item && (
+                                                <SinRegistros
+                                                    title={categoria}
                                                 />
-                                            </Document>
+                                            )}
                                         </div>
 
                                         {/* End social icon */}
@@ -85,9 +97,11 @@ const About = ({ categoria, institucion }) => {
                                             textAlign: "center",
                                         }}
                                     >
-                                        <h3 style={{ paddingTop: "20px" }}>
-                                            {item.gaceta_titulo}
-                                        </h3>
+                                        {item && (
+                                            <h3 style={{ paddingTop: "20px" }}>
+                                                {item.gaceta_titulo}
+                                            </h3>
+                                        )}
                                     </div>
                                     {/* End info */}
                                 </div>
@@ -98,20 +112,27 @@ const About = ({ categoria, institucion }) => {
                             <div className="col-lg-7 ml-auto">
                                 <div className="about-info">
                                     <div className="title">
-                                        <h3>{categoria}</h3>
+                                        <h3>{title}</h3>
                                     </div>
                                     <div className="about-text">
                                         <p>{content}</p>
                                     </div>
 
-                                    <a
-                                        className="px-btn px-btn-white"
-                                        href={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {txt_content_btn}
-                                    </a>
+                                    {item && (
+                                        <a
+                                            className="px-btn px-btn-white"
+                                            href={`${process.env.REACT_APP_ROOT_API}/Gaceta/${item.gaceta_documento}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {txt_content_btn}{" "}
+                                            <FaRegFilePdf
+                                                style={{
+                                                    fontSize: "1.2em",
+                                                }}
+                                            />
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                             {/* End col */}
@@ -121,7 +142,7 @@ const About = ({ categoria, institucion }) => {
             </>
         );
     }
-    if (categoria == TIPOS.REGLAMENTO && !loading_static_data && institucion) {
+    if (categoria === TIPOS.REGLAMENTO && !loading_static_data && institucion) {
         /* DATOS DE LA INSTITUCION */
         const {
             institucion_sobre_ins,
@@ -146,7 +167,7 @@ const About = ({ categoria, institucion }) => {
                                         <div className="img-in">
                                             <img
                                                 src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                alt="about"
+                                                alt="logo sistemas"
                                             />
                                         </div>
 
@@ -159,7 +180,12 @@ const About = ({ categoria, institucion }) => {
                                             textAlign: "center",
                                         }}
                                     >
-                                        <h3 style={{ paddingTop: "20px" }}>
+                                        <h3
+                                            style={{
+                                                paddingTop: "20px",
+                                                fontSize: "3em",
+                                            }}
+                                        >
                                             {institucion_nombre}
                                         </h3>
                                     </div>
@@ -172,11 +198,20 @@ const About = ({ categoria, institucion }) => {
                             <div className="col-lg-7 ml-auto">
                                 <div className="about-info">
                                     <div className="title">
-                                        <h3>{txt_content_reglamento}</h3>
+                                        <h3 style={{ fontSize: "3em" }}>
+                                            {txt_content_reglamento}
+                                        </h3>
                                     </div>
                                     <div
                                         className="about-text"
-                                        style={{ color: "#fff" }}
+                                        style={{
+                                            color: "#fff",
+                                            background: "rgba(0,0,0,.5)",
+                                            padding: "20px",
+                                            borderRadius: "20px",
+                                            boxShadow:
+                                                "-5px 5px 15px rgba(0,0,0,.5)",
+                                        }}
                                         dangerouslySetInnerHTML={{
                                             __html: institucion_sobre_ins,
                                         }}

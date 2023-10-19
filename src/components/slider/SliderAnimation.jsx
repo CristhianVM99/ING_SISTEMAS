@@ -45,8 +45,8 @@ const Slider = ({ title, institucion = null }) => {
             btnText: "Categorias",
         };
         const conctInfo = {
-            phone: `cel : +591 ${institucion_celular1}`,
-            email: `correo : ${institucion_correo1}`,
+            phone: `Celular : +591 ${institucion_celular1}`,
+            email: `Correo : ${institucion_correo1}`,
         };
 
         const img = RandomImage(portada);
@@ -57,10 +57,18 @@ const Slider = ({ title, institucion = null }) => {
                 <section id="home" className="home-banner">
                     <div className="hb-top-fixed d-flex">
                         <div className="hb-info">
-                            <a href={`tel:${conctInfo.phone}`}>
+                            <a
+                                href={`tel:${conctInfo.phone}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 {conctInfo.phone}
                             </a>
-                            <a href={`mailto:mail${conctInfo.email}`}>
+                            <a
+                                href={`mailto:mail${conctInfo.email}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 {conctInfo.email}
                             </a>
                         </div>

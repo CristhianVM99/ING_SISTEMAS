@@ -1,6 +1,5 @@
 import React from "react";
 import Social from "../Social";
-import Testimonials from "../testimonial/TestimonialAnimation";
 import Services from "../service/ServiceAnimation";
 import Awards from "../award/AwardsAnimation";
 
@@ -34,7 +33,13 @@ const About = ({ institucion = null }) => {
                             >
                                 <div className="about-me">
                                     <div className="img">
-                                        <div className="img-in">
+                                        <div
+                                            className="img-in"
+                                            style={{
+                                                boxShadow:
+                                                    "0px 0px 15px rgba(0,0,0,.5)",
+                                            }}
+                                        >
                                             <img
                                                 src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
                                                 alt="about"
@@ -47,8 +52,18 @@ const About = ({ institucion = null }) => {
                                     </div>
                                     {/* End img */}
                                     <div className="info">
-                                        <p>{institucion_iniciales}</p>
-                                        <h3>{institucion_nombre}</h3>
+                                        <p style={{ fontSize: "1.5em" }}>
+                                            - {institucion_iniciales} -
+                                        </p>
+                                        <h3
+                                            style={{
+                                                textShadow:
+                                                    "0px 0px 15px rgba(0,0,0,.5)",
+                                                fontSize: "3em",
+                                            }}
+                                        >
+                                            {institucion_nombre}
+                                        </h3>
                                     </div>
                                     {/* End info */}
                                 </div>
@@ -71,6 +86,13 @@ const About = ({ institucion = null }) => {
 
                                     <div
                                         className="about-text"
+                                        style={{
+                                            background: "rgba(0,0,0,.5)",
+                                            padding: "20px",
+                                            borderRadius: "20px",
+                                            boxShadow:
+                                                "-5px 5px 10px var(--color-secundario)",
+                                        }}
                                         dangerouslySetInnerHTML={{
                                             __html: institucion_historia,
                                         }}
@@ -94,9 +116,18 @@ const About = ({ institucion = null }) => {
                                                             Teléfono 1:{" "}
                                                         </label>
                                                         <span>
-                                                            {
-                                                                institucion_telefono1
-                                                            }
+                                                            <a
+                                                                href={`tel:+${institucion_telefono1}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    color: "#ffff",
+                                                                }}
+                                                            >
+                                                                {
+                                                                    institucion_telefono1
+                                                                }
+                                                            </a>
                                                         </span>
                                                     </li>
                                                     <li>
@@ -104,9 +135,18 @@ const About = ({ institucion = null }) => {
                                                             Teléfono 2:{" "}
                                                         </label>
                                                         <span>
-                                                            {
-                                                                institucion_telefono2
-                                                            }
+                                                            <a
+                                                                href={`tel:+${institucion_telefono2}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    color: "#ffff",
+                                                                }}
+                                                            >
+                                                                {
+                                                                    institucion_telefono2
+                                                                }
+                                                            </a>
                                                         </span>
                                                     </li>
                                                 </ul>
@@ -118,10 +158,19 @@ const About = ({ institucion = null }) => {
                                                             Celular 1:{" "}
                                                         </label>
                                                         <span>
-                                                            (+591){" "}
-                                                            {
-                                                                institucion_celular1
-                                                            }
+                                                            <a
+                                                                href={`tel:+591${institucion_celular1}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    color: "#ffff",
+                                                                }}
+                                                            >
+                                                                (+591){" "}
+                                                                {
+                                                                    institucion_celular1
+                                                                }
+                                                            </a>
                                                         </span>
                                                     </li>
                                                     <li>
@@ -129,10 +178,19 @@ const About = ({ institucion = null }) => {
                                                             Celular 2:{" "}
                                                         </label>
                                                         <span>
-                                                            (+591){" "}
-                                                            {
-                                                                institucion_celular2
-                                                            }
+                                                            <a
+                                                                href={`tel:+591${institucion_celular2}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    color: "#ffff",
+                                                                }}
+                                                            >
+                                                                (+591){" "}
+                                                                {
+                                                                    institucion_celular2
+                                                                }
+                                                            </a>
                                                         </span>
                                                     </li>
                                                     <li>
@@ -140,9 +198,18 @@ const About = ({ institucion = null }) => {
                                                             Correo 1:{" "}
                                                         </label>
                                                         <span>
-                                                            {
-                                                                institucion_correo1
-                                                            }
+                                                            <a
+                                                                href={`mailto:${institucion_correo1}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    color: "#ffff",
+                                                                }}
+                                                            >
+                                                                {
+                                                                    institucion_correo1
+                                                                }
+                                                            </a>
                                                         </span>
                                                     </li>
                                                     <li>
@@ -150,9 +217,18 @@ const About = ({ institucion = null }) => {
                                                             Correo 2:{" "}
                                                         </label>
                                                         <span>
-                                                            {
-                                                                institucion_correo2
-                                                            }
+                                                            <a
+                                                                href={`mailto:${institucion_correo2}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    color: "#ffff",
+                                                                }}
+                                                            >
+                                                                {
+                                                                    institucion_correo2
+                                                                }
+                                                            </a>
                                                         </span>
                                                     </li>
                                                 </ul>
@@ -201,25 +277,6 @@ const About = ({ institucion = null }) => {
 
                         <Awards institucion={institucion} />
                         {/* End Awards */}
-
-                        {/* separated */}
-                        <div
-                            className="separated"
-                            style={{
-                                backgroundImage: `url(${
-                                    process.env.PUBLIC_URL +
-                                    "img/border-dark.png"
-                                })`,
-                            }}
-                        ></div>
-                        {/* End separated */}
-
-                        {/* <div className="title">
-                            <h3>Testimonials.</h3>
-                        </div>
-
-                        <Testimonials /> */}
-                        {/* End Testimonaial */}
                     </div>
                 </section>
             </>

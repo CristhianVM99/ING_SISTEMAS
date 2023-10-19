@@ -2,6 +2,7 @@ import React from "react";
 import { getLinksInstExtAll } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { TIPOS } from "../../types/types";
+import SinRegistros from "../SinRegistros";
 
 const Awards = ({ institucion = null }) => {
     /* OBTENCION DE INFORMACON DE LINKS EXTERNOS */
@@ -24,10 +25,25 @@ const Awards = ({ institucion = null }) => {
                             key={index}
                             data-aos="fade-right"
                             data-aos-duration="1200"
-                            data-aos-delay={"300"}
+                            data-aos-delay={"200"}
                         >
-                            <div className="feature-box-02 d-flex align-items-center">
-                                <div className="icon">
+                            <div
+                                className="feature-box-02 d-flex align-items-center"
+                                style={{
+                                    border: "1px solid var(--color-primario)",
+                                    boxShadow:
+                                        "-3px 3px 5px var(--color-primario)",
+                                }}
+                            >
+                                <div
+                                    className="icon"
+                                    style={{
+                                        background: "#fff",
+                                        width: "50%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                    }}
+                                >
                                     <a
                                         href={link.ei_link}
                                         target="_blank"
@@ -59,6 +75,9 @@ const Awards = ({ institucion = null }) => {
                         </div>
                         // End .col
                     ))}
+                    {links_filter.length === 0 && (
+                        <SinRegistros title={"LINKS"} />
+                    )}
                 </div>
                 {/* End .row */}
             </>

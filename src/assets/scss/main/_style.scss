@@ -42,13 +42,18 @@
             content: "";
             width: 45px;
             height: 45px;
-            border-radius: 50%;
-            background: $px-theme;
+            //border-radius: 50%;
+            clip-path: polygon(0 0, 0% 100%, 100% 50%);
+            background: linear-gradient(
+                45deg,
+                var(--color-primario),
+                var(--color-secundario)
+            );
             position: absolute;
             top: -8px;
             left: -15px;
             z-index: -1;
-            -webkit-animation: slide-both-sidee 4s infinite both;
+            -webkit-animation: slide-both-side 4s infinite both;
             animation: slide-both-side 4s infinite both;
 
             .theme-light & {
@@ -344,6 +349,7 @@
         max-height: 358px;
         margin: auto;
         overflow: hidden;
+        position: relative;
         border: 5px solid $px-white;
         .theme-light & {
             border: 5px solid $px-theme;
