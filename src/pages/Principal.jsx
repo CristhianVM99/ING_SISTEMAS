@@ -13,7 +13,6 @@ import Awards from "../components/award/AwardsAnimation";
 import RedesAnimation from "../components/RedesAnimation";
 import ImageIntermedio from "../components/ImageIntermedio";
 import Loader from "../components/Loader";
-import SinRegistros from "../components/SinRegistros";
 
 const Principal = () => {
     // obtención de la información sobre la carrera
@@ -43,13 +42,14 @@ const Principal = () => {
         return (
             <>
                 <div className="main-left theme-dark">
-                    {/* HEADER ---------------------------- */}
-                    <Header institucion={institucion} />
-                    {/* SLIDER PRINCIPAL ------------------ */}
-                    <Slider institucion={institucion} />
-
                     {/* LOADER ---------------------------- */}
                     {mostrarMiComponente && <Loader />}
+
+                    {/* HEADER ---------------------------- */}
+                    <Header institucion={institucion} />
+
+                    {/* SLIDER PRINCIPAL ------------------ */}
+                    <Slider institucion={institucion} />
 
                     {/* AUTORIDADES ----------------------- */}
                     <section className="section">

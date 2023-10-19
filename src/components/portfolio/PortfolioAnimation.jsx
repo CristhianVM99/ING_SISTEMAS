@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { Tabs, TabPanel } from "react-tabs";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import { FiLink } from "react-icons/fi";
@@ -198,6 +198,28 @@ const PortfolioAnimation = ({ institucion }) => {
                                                                             open
                                                                         }
                                                                     />
+                                                                    <h5
+                                                                        style={{
+                                                                            textAlign:
+                                                                                "center",
+                                                                            background:
+                                                                                "var(--color-primario)",
+                                                                            color: "#fff",
+                                                                        }}
+                                                                    >
+                                                                        <NavLink
+                                                                            to={
+                                                                                val.portfolioLink
+                                                                            }
+                                                                            style={{
+                                                                                color: "#fff",
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                val.title
+                                                                            }
+                                                                        </NavLink>
+                                                                    </h5>
                                                                 </div>
                                                             )}
                                                         </Item>

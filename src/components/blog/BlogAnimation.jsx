@@ -145,7 +145,6 @@ const Blog = ({ categoria, institucion = null }) => {
                 )
                 .slice(currentPage, currentPage + 6);
         };
-        console.log("filter", filter_convocatorias().length);
 
         const nextPage = () => {
             if (
@@ -462,7 +461,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_comunicados().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -683,7 +684,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_avisos().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -904,7 +907,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -1218,7 +1223,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -1513,7 +1520,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -1725,7 +1734,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -1954,7 +1965,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -2167,7 +2180,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -2365,7 +2380,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -2576,7 +2593,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 
@@ -2758,7 +2777,9 @@ const Blog = ({ categoria, institucion = null }) => {
                             </div>
                         </div>
                     ))}
-                    {/* End .col for blog-1 */}
+                    {filter_convocatorias().length === 0 && (
+                        <SinRegistros title={categoria} />
+                    )}
                 </div>
                 {/* End .row */}
 

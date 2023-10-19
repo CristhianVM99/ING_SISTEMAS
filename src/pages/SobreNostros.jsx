@@ -19,25 +19,28 @@ const SobreNosotros = () => {
         institucion && ConfigColorIcon(institucion, "SOBRE NOSOTROS");
     }, [institucion]);
 
-    return (
-        <div className="main-left theme-dark">
-            {/* HEADER -------------------------------------------- */}
-            <Header institucion={institucion} />
+    if (!loading_institucion) {
+        return (
+            <div className="main-left theme-dark">
+                {/* HEADER -------------------------------------------- */}
+                <Header institucion={institucion} />
 
-            {/* SALIDER ------------------------------------------- */}
-            <Slider title={`SOBRE NOSOTROS`} institucion={institucion} />
+                {/* SALIDER ------------------------------------------- */}
+                <Slider title={`SOBRE NOSOTROS`} institucion={institucion} />
 
-            {/* DATOS DE LA INSTITUCION --------------------------- */}
-            <About institucion={institucion} />
+                {/* DATOS DE LA INSTITUCION --------------------------- */}
+                <About institucion={institucion} />
 
-            {/* FOOTER -------------------------------------------- */}
-            <footer className="footer white">
-                <div className="container">
-                    <Footer institucion={institucion} />
-                </div>
-            </footer>
-        </div>
-    );
+                {/* FOOTER -------------------------------------------- */}
+                <footer className="footer white">
+                    <div className="container">
+                        <Footer institucion={institucion} />
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+    return null;
 };
 
 export default SobreNosotros;

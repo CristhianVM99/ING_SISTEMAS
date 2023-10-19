@@ -19,36 +19,39 @@ const Contacto = () => {
         institucion && ConfigColorIcon(institucion, "CONTACTO");
     }, [institucion]);
 
-    return (
-        <div className="main-left theme-dark">
-            {/* HEADER --------------------------------------- */}
-            <Header institucion={institucion} />
+    if (!loading_institucion) {
+        return (
+            <div className="main-left theme-dark">
+                {/* HEADER --------------------------------------- */}
+                <Header institucion={institucion} />
 
-            {/* SLIDER --------------------------------------- */}
-            <Slider title={`CONTACTO`} institucion={institucion} />
+                {/* SLIDER --------------------------------------- */}
+                <Slider title={`CONTACTO`} institucion={institucion} />
 
-            {/* INFORMACIÓN DEL CONTACTO ----------------------*/}
-            <section id="contactus" className="section theme-light dark-bg">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-5 col-xl-4 m-15px-tb">
-                            <ContactInfo institucion={institucion} />
-                        </div>
-                        <div className="col-lg-7 col-xl-8 m-15px-tb">
-                            <Map institucion={institucion} />
+                {/* INFORMACIÓN DEL CONTACTO ----------------------*/}
+                <section id="contactus" className="section theme-light dark-bg">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-5 col-xl-4 m-15px-tb">
+                                <ContactInfo institucion={institucion} />
+                            </div>
+                            <div className="col-lg-7 col-xl-8 m-15px-tb">
+                                <Map institucion={institucion} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* FOOTER ---------------------------------------- */}
-            <footer className="footer white">
-                <div className="container">
-                    <Footer institucion={institucion} />
-                </div>
-            </footer>
-        </div>
-    );
+                {/* FOOTER ---------------------------------------- */}
+                <footer className="footer white">
+                    <div className="container">
+                        <Footer institucion={institucion} />
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+    return null;
 };
 
 export default Contacto;

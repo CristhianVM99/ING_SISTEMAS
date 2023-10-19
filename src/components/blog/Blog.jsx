@@ -4,7 +4,6 @@ import { TIPOS } from "../../types/types";
 import { getConvocatorias, getCursos } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import BlogNav from "./BlogNav";
-import SinRegistros from "../SinRegistros";
 
 Modal.setAppElement("#root");
 
@@ -111,419 +110,446 @@ const Blog = ({ categoria, institucion = null }) => {
         return (
             <>
                 <div className="row">
-                    <div
-                        className="col-md-4 m-15px-tb"
-                        style={{
-                            border: "3px solid transparent",
-                            borderRight: "1px solid transparent",
-                            borderImage:
-                                "linear-gradient(to top,var(--color-primario),transparent)",
-                            borderImageSlice: 1,
-                            paddingTop: "40px",
-                        }}
-                    >
-                        <div className="blog-grid" onClick={toggleModalOne}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            width: "100%",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(
-                                        lastConvocatoria.con_fecha_inicio
-                                    )}{" "}
-                                    -{" "}
-                                    {
-                                        lastConvocatoria.tipo_conv_comun
-                                            .tipo_conv_comun_titulo
-                                    }
+                    {lastConvocatoria && (
+                        <div
+                            className="col-md-4 m-15px-tb"
+                            style={{
+                                border: "3px solid transparent",
+                                borderRight: "1px solid transparent",
+                                borderImage:
+                                    "linear-gradient(to top,var(--color-primario),transparent)",
+                                borderImageSlice: 1,
+                                paddingTop: "40px",
+                            }}
+                        >
+                            <div className="blog-grid" onClick={toggleModalOne}>
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
+                                            alt="blog post"
+                                            style={{
+                                                height: "477px",
+                                                width: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        ></img>
+                                    </a>
                                 </div>
-                                <h6>
-                                    <a>{lastConvocatoria.con_titulo}</a>
-                                </h6>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(
+                                            lastConvocatoria.con_fecha_inicio
+                                        )}{" "}
+                                        -{" "}
+                                        {
+                                            lastConvocatoria.tipo_conv_comun
+                                                .tipo_conv_comun_titulo
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{lastConvocatoria.con_titulo}</a>
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     {/* End .col for blog-1 */}
 
-                    <div
-                        className="col-md-4 m-15px-tb"
-                        style={{
-                            border: "3px solid transparent",
-                            borderRight: "1px solid transparent",
-                            borderLeft: "1px solid transparent",
-                            borderImage:
-                                "linear-gradient(to top,var(--color-primario),transparent)",
-                            borderImageSlice: 1,
-                            paddingTop: "40px",
-                        }}
-                    >
-                        <div className="blog-grid" onClick={toggleModalTwo}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastComunicado.con_foto_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            width: "100%",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(
-                                        lastComunicado.con_fecha_inicio
-                                    )}{" "}
-                                    -{" "}
-                                    {
-                                        lastComunicado.tipo_conv_comun
-                                            .tipo_conv_comun_titulo
-                                    }
+                    {lastComunicado && (
+                        <div
+                            className="col-md-4 m-15px-tb"
+                            style={{
+                                border: "3px solid transparent",
+                                borderRight: "1px solid transparent",
+                                borderLeft: "1px solid transparent",
+                                borderImage:
+                                    "linear-gradient(to top,var(--color-primario),transparent)",
+                                borderImageSlice: 1,
+                                paddingTop: "40px",
+                            }}
+                        >
+                            <div className="blog-grid" onClick={toggleModalTwo}>
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastComunicado.con_foto_portada}`}
+                                            alt="blog post"
+                                            style={{
+                                                height: "477px",
+                                                width: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        ></img>
+                                    </a>
                                 </div>
-                                <h6>
-                                    <a>{lastComunicado.con_titulo}</a>
-                                </h6>
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(
+                                            lastComunicado.con_fecha_inicio
+                                        )}{" "}
+                                        -{" "}
+                                        {
+                                            lastComunicado.tipo_conv_comun
+                                                .tipo_conv_comun_titulo
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{lastComunicado.con_titulo}</a>
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     {/* End .col for blog-2 */}
 
-                    <div
-                        className="col-md-4 m-15px-tb"
-                        style={{
-                            border: "3px solid transparent",
-                            borderLeft: "1px solid transparent",
-                            borderImage:
-                                "linear-gradient(to top,var(--color-primario),transparent)",
-                            borderImageSlice: 1,
-                            paddingTop: "40px",
-                        }}
-                    >
-                        <div className="blog-grid" onClick={toggleModalThree}>
-                            <div className="blog-img">
-                                <a>
-                                    <img
-                                        src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastAviso.con_foto_portada}`}
-                                        alt="blog post"
-                                        style={{
-                                            height: "477px",
-                                            width: "100%",
-                                            objectFit: "cover",
-                                        }}
-                                    ></img>
-                                </a>
-                            </div>
-
-                            <div className="blog-info">
-                                <div className="meta">
-                                    Fecha :{" "}
-                                    {formatearFecha(lastAviso.con_fecha_inicio)}{" "}
-                                    -{" "}
-                                    {
-                                        lastAviso.tipo_conv_comun
-                                            .tipo_conv_comun_titulo
-                                    }
+                    {lastAviso && (
+                        <div
+                            className="col-md-4 m-15px-tb"
+                            style={{
+                                border: "3px solid transparent",
+                                borderLeft: "1px solid transparent",
+                                borderImage:
+                                    "linear-gradient(to top,var(--color-primario),transparent)",
+                                borderImageSlice: 1,
+                                paddingTop: "40px",
+                            }}
+                        >
+                            <div
+                                className="blog-grid"
+                                onClick={toggleModalThree}
+                            >
+                                <div className="blog-img">
+                                    <a>
+                                        <img
+                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastAviso.con_foto_portada}`}
+                                            alt="blog post"
+                                            style={{
+                                                height: "477px",
+                                                width: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        ></img>
+                                    </a>
                                 </div>
-                                <h6>
-                                    <a>{lastAviso.con_titulo}</a>
-                                </h6>
+
+                                <div className="blog-info">
+                                    <div className="meta">
+                                        Fecha :{" "}
+                                        {formatearFecha(
+                                            lastAviso.con_fecha_inicio
+                                        )}{" "}
+                                        -{" "}
+                                        {
+                                            lastAviso.tipo_conv_comun
+                                                .tipo_conv_comun_titulo
+                                        }
+                                    </div>
+                                    <h6>
+                                        <a>{lastAviso.con_titulo}</a>
+                                    </h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     {/* End .col for blog-3 */}
                 </div>
                 {/* End .row */}
 
                 {/* Start Modal for Blog-1 */}
-                <Modal
-                    isOpen={isOpen}
-                    onRequestClose={toggleModalOne}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalOne}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
+                {lastConvocatoria && (
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={toggleModalOne}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={toggleModalOne}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
 
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>
-                                                {lastConvocatoria.con_titulo}
-                                            </h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastConvocatoria.con_fecha_inicio
-                                                        )}
-                                                    </span>
-                                                    <hr />
-                                                    <h5>DESCRIPCIÓN</h5>
-                                                    <hr />
-                                                    <div
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: lastConvocatoria.con_descripcion,
-                                                        }}
-                                                    ></div>
-                                                    <hr />
-                                                    <h5>DATOS E INFORMACIÓN</h5>
-                                                    <hr />
-                                                    <p>
-                                                        Fecha de inicio :{" "}
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastConvocatoria.con_foto_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {
+                                                        lastConvocatoria.con_titulo
+                                                    }
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
                                                         <span>
                                                             {formatearFecha(
                                                                 lastConvocatoria.con_fecha_inicio
                                                             )}
                                                         </span>
-                                                    </p>
-                                                    <p>
-                                                        Fecha de Fin :{" "}
-                                                        <span>
-                                                            {formatearFecha(
-                                                                lastConvocatoria.con_fecha_fin
-                                                            )}
-                                                        </span>
-                                                    </p>
+                                                        <hr />
+                                                        <h5>DESCRIPCIÓN</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: lastConvocatoria.con_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    lastConvocatoria.con_fecha_inicio
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    lastConvocatoria.con_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {/* End .article-title */}
-                                        {/* End article content */}
-                                        <BlogNav setIsOpen={setIsOpen} />
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
+                                            {/* End .article-title */}
+                                            {/* End article content */}
+                                            <BlogNav setIsOpen={setIsOpen} />
+                                            {/* End tag */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
                 {/* End  Modal for Blog-1 */}
 
                 {/* Start Modal for Blog-2 */}
-                <Modal
-                    isOpen={isOpen2}
-                    onRequestClose={toggleModalTwo}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalTwo}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
+                {lastComunicado && (
+                    <Modal
+                        isOpen={isOpen2}
+                        onRequestClose={toggleModalTwo}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={toggleModalTwo}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
 
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastComunicado.con_foto_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>{lastComunicado.con_titulo}</h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastComunicado.con_fecha_inicio
-                                                        )}
-                                                    </span>
-                                                    <hr />
-                                                    <h5>DESCRIPCIÓN</h5>
-                                                    <hr />
-                                                    <div
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: lastComunicado.con_descripcion,
-                                                        }}
-                                                    ></div>
-                                                    <hr />
-                                                    <h5>DATOS E INFORMACIÓN</h5>
-                                                    <hr />
-                                                    <p>
-                                                        Fecha de inicio :{" "}
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastComunicado.con_foto_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>
+                                                    {lastComunicado.con_titulo}
+                                                </h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
                                                         <span>
                                                             {formatearFecha(
                                                                 lastComunicado.con_fecha_inicio
                                                             )}
                                                         </span>
-                                                    </p>
-                                                    <p>
-                                                        Fecha de Fin :{" "}
-                                                        <span>
-                                                            {formatearFecha(
-                                                                lastComunicado.con_fecha_fin
-                                                            )}
-                                                        </span>
-                                                    </p>
+                                                        <hr />
+                                                        <h5>DESCRIPCIÓN</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: lastComunicado.con_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    lastComunicado.con_fecha_inicio
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    lastComunicado.con_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {/* End .article-title */}
-                                        {/* End article content */}
-                                        <BlogNav setIsOpen={setIsOpen} />
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
+                                            {/* End .article-title */}
+                                            {/* End article content */}
+                                            <BlogNav setIsOpen={setIsOpen} />
+                                            {/* End tag */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
                 {/* End  Modal for Blog-2 */}
 
                 {/* Start Modal for Blog-3 */}
-                <Modal
-                    isOpen={isOpen3}
-                    onRequestClose={toggleModalThree}
-                    contentLabel="My dialog"
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    closeTimeoutMS={500}
-                >
-                    <div>
-                        <button
-                            className="close-modal"
-                            onClick={toggleModalThree}
-                        >
-                            <img src="/img/cancel.svg" alt="close icon" />
-                        </button>
-                        {/* End close icon */}
+                {lastAviso && (
+                    <Modal
+                        isOpen={isOpen3}
+                        onRequestClose={toggleModalThree}
+                        contentLabel="My dialog"
+                        className="custom-modal"
+                        overlayClassName="custom-overlay"
+                        closeTimeoutMS={500}
+                    >
+                        <div>
+                            <button
+                                className="close-modal"
+                                onClick={toggleModalThree}
+                            >
+                                <img src="/img/cancel.svg" alt="close icon" />
+                            </button>
+                            {/* End close icon */}
 
-                        <div className="box_inner">
-                            <div className="scrollable">
-                                <div className="blog-grid">
-                                    <div className="blog-img">
-                                        <img
-                                            src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastAviso.con_foto_portada}`}
-                                            style={{ width: "100%" }}
-                                            alt="blog post"
-                                        ></img>
-                                    </div>
-                                    {/* End blog-img */}
-                                    <article className="article">
-                                        <div className="article-title">
-                                            <h2>{lastAviso.con_titulo}</h2>
-                                            <div className="media">
-                                                <div className="avatar">
-                                                    <img
-                                                        src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
-                                                        alt="thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="media-body">
-                                                    <label>
-                                                        {institucion_nombre}
-                                                    </label>
-                                                    <span>
-                                                        {formatearFecha(
-                                                            lastAviso.con_fecha_inicio
-                                                        )}
-                                                    </span>
-                                                    <hr />
-                                                    <h5>DESCRIPCIÓN</h5>
-                                                    <hr />
-                                                    <div
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: lastAviso.con_descripcion,
-                                                        }}
-                                                    ></div>
-                                                    <hr />
-                                                    <h5>DATOS E INFORMACIÓN</h5>
-                                                    <hr />
-                                                    <p>
-                                                        Fecha de inicio :{" "}
+                            <div className="box_inner">
+                                <div className="scrollable">
+                                    <div className="blog-grid">
+                                        <div className="blog-img">
+                                            <img
+                                                src={`${process.env.REACT_APP_ROOT_API}/Convocatorias/${lastAviso.con_foto_portada}`}
+                                                style={{ width: "100%" }}
+                                                alt="blog post"
+                                            ></img>
+                                        </div>
+                                        {/* End blog-img */}
+                                        <article className="article">
+                                            <div className="article-title">
+                                                <h2>{lastAviso.con_titulo}</h2>
+                                                <div className="media">
+                                                    <div className="avatar">
+                                                        <img
+                                                            src={`${process.env.REACT_APP_ROOT_API}/InstitucionUpea/${institucion_logo}`}
+                                                            alt="thumbnail"
+                                                        />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <label>
+                                                            {institucion_nombre}
+                                                        </label>
                                                         <span>
                                                             {formatearFecha(
                                                                 lastAviso.con_fecha_inicio
                                                             )}
                                                         </span>
-                                                    </p>
-                                                    <p>
-                                                        Fecha de Fin :{" "}
-                                                        <span>
-                                                            {formatearFecha(
-                                                                lastAviso.con_fecha_fin
-                                                            )}
-                                                        </span>
-                                                    </p>
+                                                        <hr />
+                                                        <h5>DESCRIPCIÓN</h5>
+                                                        <hr />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: lastAviso.con_descripcion,
+                                                            }}
+                                                        ></div>
+                                                        <hr />
+                                                        <h5>
+                                                            DATOS E INFORMACIÓN
+                                                        </h5>
+                                                        <hr />
+                                                        <p>
+                                                            Fecha de inicio :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    lastAviso.con_fecha_inicio
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Fecha de Fin :{" "}
+                                                            <span>
+                                                                {formatearFecha(
+                                                                    lastAviso.con_fecha_fin
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {/* End .article-title */}
-                                        {/* End article content */}
-                                        <BlogNav setIsOpen={setIsOpen} />
-                                        {/* End tag */}
-                                    </article>
-                                    {/* End Article */}
+                                            {/* End .article-title */}
+                                            {/* End article content */}
+                                            <BlogNav setIsOpen={setIsOpen} />
+                                            {/* End tag */}
+                                        </article>
+                                        {/* End Article */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {/* End modal box news */}
-                </Modal>
+                        {/* End modal box news */}
+                    </Modal>
+                )}
                 {/* End  Modal for Blog-3 */}
             </>
         );

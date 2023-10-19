@@ -16,7 +16,6 @@ const Slider = ({ title, institucion = null }) => {
 
     if (institucion && !loading_static_data) {
         const {
-            institucion_nombre,
             institucion_correo1,
             institucion_celular1,
             institucion_iniciales,

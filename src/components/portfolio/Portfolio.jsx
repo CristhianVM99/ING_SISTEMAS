@@ -8,7 +8,6 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { getGacetas } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { TIPOS } from "../../types/types";
-import { NavLink } from "react-router-dom";
 import SinRegistros from "../SinRegistros";
 
 const Portfolio = ({ categoria, institucion = null }) => {

@@ -3,7 +3,6 @@ import { getGacetas, getStaticDataAcademia } from "../../api/institucionAPI";
 import { useQuery } from "@tanstack/react-query";
 import { TIPOS } from "../../types/types";
 import { Document, Page, pdfjs } from "react-pdf";
-import RandomImage from "../../utils/RandomImage";
 import { FaRegFilePdf } from "react-icons/fa";
 import SinRegistros from "../SinRegistros";
 
@@ -144,17 +143,11 @@ const About = ({ categoria, institucion }) => {
     }
     if (categoria === TIPOS.REGLAMENTO && !loading_static_data && institucion) {
         /* DATOS DE LA INSTITUCION */
-        const {
-            institucion_sobre_ins,
-            institucion_nombre,
-            portada,
-            institucion_logo,
-        } = institucion;
+        const { institucion_sobre_ins, institucion_nombre, institucion_logo } =
+            institucion;
 
         /* DATOS ESTATICOS */
         const { txt_content_reglamento } = staticData;
-
-        const img = RandomImage(portada);
 
         return (
             <>

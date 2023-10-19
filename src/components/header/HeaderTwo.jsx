@@ -1,27 +1,17 @@
 import React, { useState } from "react";
-import Scrollspy from "react-scrollspy";
-import { Link, NavLink } from "react-router-dom";
-import {
-    FiUser,
-    FiBriefcase,
-    FiFileText,
-    FiPhoneOutgoing,
-} from "react-icons/fi";
+import { NavLink } from "react-router-dom";
+import { FiFileText } from "react-icons/fi";
 import {
     FaHome,
-    FaBlog,
-    FaInfoCircle,
     FaQuestionCircle,
     FaGraduationCap,
     FaUniversity,
-    FaBell,
     FaFileAlt,
     FaEnvelope,
     FaPlus,
     FaDesktop,
     FaLink,
     FaExternalLinkAlt,
-    FaCog,
     FaBook,
     FaPaperPlane,
     FaNewspaper,

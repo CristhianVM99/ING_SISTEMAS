@@ -23,25 +23,28 @@ const Academia = () => {
     //obtenemos el parametro de la URL
     const { categoria } = useParams();
 
-    return (
-        <div className="main-left theme-dark">
-            {/* HEADER -------------------------------------- */}
-            <Header institucion={institucion} />
+    if (!loading_institucion) {
+        return (
+            <div className="main-left theme-dark">
+                {/* HEADER -------------------------------------- */}
+                <Header institucion={institucion} />
 
-            {/* SLIDER -------------------------------------- */}
-            <Slider title={categoria} institucion={institucion} />
+                {/* SLIDER -------------------------------------- */}
+                <Slider title={categoria} institucion={institucion} />
 
-            {/* SOBRE LA ACADEMIA --------------------------- */}
-            <About categoria={categoria} institucion={institucion} />
+                {/* SOBRE LA ACADEMIA --------------------------- */}
+                <About categoria={categoria} institucion={institucion} />
 
-            {/* FOOTER -------------------------------------- */}
-            <footer className="footer white">
-                <div className="container">
-                    <Footer institucion={institucion} />
-                </div>
-            </footer>
-        </div>
-    );
+                {/* FOOTER -------------------------------------- */}
+                <footer className="footer white">
+                    <div className="container">
+                        <Footer institucion={institucion} />
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+    return null;
 };
 
 export default Academia;
